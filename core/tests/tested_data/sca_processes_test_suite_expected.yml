@@ -1,0 +1,46 @@
+checks:
+  - id: 400100
+    condition: any
+    rules:
+      - execution_node:
+          type: "p"
+          main_target: "systemd"
+          sub_target: null
+          target_pattern: null
+        negation: false
+  - id: 400101
+    condition: any
+    rules:
+      - execution_node:
+          type: "p"
+          main_target: "systemd"
+          sub_target: null
+          target_pattern: null
+        negation: true
+  - id: 400102
+    condition: any
+    rules:
+      - execution_node:
+          type: "p"
+          main_target: "systemd_FAKE"
+          sub_target: null
+          target_pattern: null
+        negation: false
+  - id: 400103
+    condition: any
+    rules:
+      - execution_node:
+          type: "p"
+          main_target: "systemd_FAKE"
+          sub_target: null
+          target_pattern: null
+        negation: true
+  - id: 400104
+    condition: any
+    rules:
+      - execution_node:
+          type: "p"
+          main_target: null
+          sub_target: null
+          target_pattern: "systemd"
+        negation: false

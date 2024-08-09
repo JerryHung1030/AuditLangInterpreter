@@ -1,0 +1,60 @@
+checks:
+  - id: 1
+    condition: "all"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "findmnt --kernel /tmp"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "\\s*/tmp\\s"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "c"
+          main_target: "systemctl is-enabled tmp.mount"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "generated|enabled"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+
+  - id: 2
+    condition: "all"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "findmnt --kernel /tmp"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "nodev"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+
+  - id: 3
+    condition: "all"
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/etc/shadow"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^root:\\$\\d+"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false

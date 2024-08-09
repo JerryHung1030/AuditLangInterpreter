@@ -1,0 +1,52 @@
+checks:
+  - id: 700100
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 700101
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+
+  - id: 700102
+    errors:
+      code: 'E004'
+      rule_number: 1
+
+      
+  - id: 700103
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 700104
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 700105
+    errors:
+      code: 'E004'
+      rule_number: 1

@@ -1,0 +1,652 @@
+checks:
+  - id: 800100
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/logs/ossec.log"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800101
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800102
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800103
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800104
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800105
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 800106
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800107
+    condition: any
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800200
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/logs/ossec.log"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800201
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800202
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800203
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800204
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800205
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 800206
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800207
+    condition: all
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800300
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/client.keys"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/logs/ossec.log"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800301
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800302
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800303
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800304
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800305
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE2"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 800306
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE1"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 800307
+    condition: none
+    rules:
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "^FAKE"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf_FAKE"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+      - execution_node:
+          type: "f"
+          main_target: "/var/ossec/etc/ossec.conf"
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false

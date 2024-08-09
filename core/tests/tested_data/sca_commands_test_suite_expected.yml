@@ -1,0 +1,112 @@
+checks:
+  - id: 300100
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "echo -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "ABC"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+
+  - id: 300101
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "echo -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "ABC"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true
+
+  - id: 300102
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "echo -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "CBA"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+
+  - id: 300103
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "echo -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "CBA"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true
+
+  - id: 300104
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "_IM_NO_COMMAND_ -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "CBA"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+
+  - id: 300105
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "_IM_NO_COMMAND_ -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "CBA"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true
+
+  - id: 300106
+    condition: "any"
+    rules:
+      - execution_node:
+          type: "c"
+          main_target: "/var/ossec/etc/ossec.conf -n ABC"
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: "r"
+            value: "CBA"
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true

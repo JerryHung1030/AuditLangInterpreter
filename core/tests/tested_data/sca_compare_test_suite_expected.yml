@@ -1,0 +1,232 @@
+checks:
+  - id: 900100
+    condition: all
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 20'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '<'
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 20'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '<'
+            compare_value: '10'
+            negation: false
+        negation: true
+
+  - id: 900101
+    condition: all
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 20'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '<='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '<='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 20'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '<='
+            compare_value: '10'
+            negation: false
+        negation: true
+
+  - id: 900102
+    condition: all
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '=='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '=='
+            compare_value: '10'
+            negation: false
+        negation: true
+
+  - id: 900103
+    condition: all
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 10'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '!='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '!='
+            compare_value: '100'
+            negation: false
+        negation: true
+
+  - id: 900104
+    condition: any
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 1000'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '>='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '>='
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 1000'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '>='
+            compare_value: '10'
+            negation: false
+        negation: true
+
+  - id: 900105
+    condition: any
+    rules:
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 1000'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '>'
+            compare_value: '100'
+            negation: false
+        negation: false
+      - execution_node:
+          type: 'c'
+          main_target: 'echo -n SomeValue 100'
+          sub_target: null
+          target_pattern: null
+        content_rules:
+          - content_operator: 'n'
+            value: '^SomeValue (\d+)'
+            compare_operator: '>'
+            compare_value: '100'
+            negation: false
+        negation: true
+
+  - id: 900106
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900107
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900108
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900109
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900110
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900111
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900112
+    errors:
+      code: 'E010'
+      rule_number: 1
+
+  - id: 900113
+    errors:
+      code: 'E010'
+      rule_number: 1

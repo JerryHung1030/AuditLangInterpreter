@@ -1,0 +1,605 @@
+checks:
+  - id: 100100
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+  - id: 100101
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+  - id: 100102
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+  - id: 100103
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+  - id: 100200
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+  - id: 100201
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: false
+  - id: 100202
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+      - execution_node:
+          type: "d"
+          main_target: "/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+  - id: 100203
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+      - execution_node:
+          type: "d"
+          main_target: "/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules: []
+        negation: true
+  - id: 100303
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "fakefile"
+              sub_target: null
+              target_pattern: null
+            content_rules:
+              - content_operator: "r"
+                value: "^Wazuh"
+                compare_operator: null
+                compare_value: null
+                negation: false
+            negation: false
+        negation: false
+
+  - id: 100400
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "ossec.conf"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: false
+        negation: false
+
+  - id: 100401
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "ossec.conf"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: true
+        negation: false
+  
+  - id: 100402
+    condition: none
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "ossec.conf"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: false
+        negation: false
+
+  - id: 100403
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "fakefile"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: true
+        negation: false
+
+  - id: 100404
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "fakefile"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: false
+        negation: false
+
+  - id: 100405
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: "ossec.conf"
+              sub_target: null
+              target_pattern: null
+            content_rules: []
+            negation: true
+        negation: false
+
+  - id: 100500
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "FAKE"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "FAKE"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "FAKE"
+            content_rules: []
+            negation: false
+        negation: false
+  - id: 100501
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+
+  - id: 100502
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+  - id: 100503
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec"
+            content_rules: []
+            negation: false
+        negation: false
+  - id: 100504
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/logs"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "ossec.conf"
+            content_rules: []
+            negation: false
+        negation: false
+  - id: 100505
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/logs"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+  - id: 100506
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/ruleset"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/fakedir"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+      - execution_node:
+          type: "d"
+          main_target: "/var/ossec/etc"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: "fake.conf"
+            content_rules: []
+            negation: false
+        negation: false
+
+  - id: 100507
+    condition: any
+    rules:
+      - execution_node:
+          type: "d"
+          main_target: "/boot"
+          sub_target: null
+          target_pattern: null
+        file_rules:
+          - execution_node:
+              type: "f"
+              main_target: null
+              sub_target: null
+              target_pattern: \.*grub.cfg
+            content_rules:
+              - content_operator: "r"
+                value: "^\\s*\\t*linux"
+                compare_operator: null
+                compare_value: null
+                negation: false
+              - content_operator: "r"
+                value: "audit=1"
+                compare_operator: null
+                compare_value: null
+                negation: true
+            negation: false
+        negation: true

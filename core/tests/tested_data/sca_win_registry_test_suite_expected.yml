@@ -1,0 +1,201 @@
+checks:
+  - id: 99000
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 99001
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 99002
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 99200
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion_FAKE'
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 99201
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType_FAKE'
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 99202
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System_FAKE'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true
+  - id: 99203
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System_FAKE'
+            compare_operator: null
+            compare_value: null
+            negation: true
+        negation: false
+  - id: 99100
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion_FAKE'
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 99101
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'ProductName_FAKE'
+          target_pattern: null
+        content_rules: []
+        negation: false
+  - id: 99102
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System_FAKE'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 99300
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: null
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 99301
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules: []
+        negation: true
+  - id: 99302
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: true
+  - id: 99303
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System'
+            compare_operator: null
+            compare_value: null
+            negation: true
+        negation: false
+  - id: 99900
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion_FAKEED'
+          sub_target: 'SoftwareType'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false
+  - id: 99901
+    condition: any
+    rules:
+      - execution_node:
+          type: 'r'
+          main_target: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          sub_target: 'SoftwareType_FAKEED'
+          target_pattern: null
+        content_rules:
+          - content_operator: null
+            value: 'System'
+            compare_operator: null
+            compare_value: null
+            negation: false
+        negation: false

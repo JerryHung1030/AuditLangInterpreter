@@ -1,0 +1,71 @@
+checks:
+  - id: 28623
+    condition: all
+    rules:
+      - 'f:/etc/rsyslog.conf -> r:^\s*\t*\$FileCreateMode 0640'
+      - 'd:/etc/rsyslog.d -> r:\.*.conf -> r:^\s*\t*\$FileCreateMode 0640'
+
+  - id: 28632
+    condition: all
+    rules:
+      - "not f:/etc/cron.deny"
+      - 'c:stat /etc/cron.allow -> r:Access:\s*\t*\(0640/-rw-r-----\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)'
+
+  - id: 28635
+    condition: any
+    rules:
+      - 'c:sshd -T -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+      - 'd:/etc/ssh/sshd_config.d -> r:\.* -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+
+  - id: 28657
+    condition: none
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*\t*NOPASSWD'
+      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*NOPASSWD'
+
+  - id: 28534
+    condition: all
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && r:apparmor=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && r:security=apparmor'
+      - 'not f:/boot/grub/grub.cfg -> r:^\s*linux && !r:apparmor=1'
+      - 'not f:/boot/grub/grub.cfg -> r:^\s*linux && !r:security=apparmor'
+
+  - id: 28536
+    condition: all
+    rules:
+      - 'c:apparmor_status -> n:^(\d+)\s+profiles\s+are\s+loaded compare > 0'
+      - 'c:apparmor_status -> n:^(\d+)\s+profiles\s+are\s+in\s+enforce\s+mode compare > 0'
+      - 'c:apparmor_status -> r:^0\s+profiles\s+are\s+in\s+kill\s+mode'
+      - 'c:apparmor_status -> r:^0\s+profiles\s+are\s+in\s+unconfined\s+mode'
+      - 'c:apparmor_status -> r:^0\s*profiles\s+are\s+in\s+complain\s+mode'
+      - 'c:apparmor_status -> r:^0\s*processes\s+are\s+unconfined'
+
+  - id: 28606
+    condition: none
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:log_group\s*\t*= && !r:adm|root'
+
+  - id: 28531
+    condition: all
+    rules:
+      - "c:systemctl is-enabled apport.service -> r:disabled"
+      - "not f:/etc/default/apport -> n:enabled=(\\d+) compare != 0"
+      - "not c:systemctl is-active apport.service -> r:active"
+
+  - id: 28592
+    condition: all
+    rules:
+      - 'not d:/boot -> r:\.*grub.cfg -> r:^\s*\t*linux && !r:audit=1'
+
+  - id: 28662
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*required\s*\t*pam_faillock.so\s*\t*preauth'
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*[default=die]\s*\t*pam_faillock.so\s*\t*authfail'
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*sufficient\s*\t*pam_faillock.so\s*\t*authsucc'
+      - 'f:/etc/pam.d/common-account -> r:^\s*\t*account\s*\t*required\s*\t*pam_faillock.so'
+      - 'f:/etc/security/faillock.conf -> n:^\s*\t*deny\s*\t*=\s*\t*(\d+) compare <= 4'
+      - 'f:/etc/security/faillock.conf -> n:^\s*\t*fail_interval\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'not f:/etc/security/faillock.conf -> n:^\s*\t*unlock_time\s*\t*=\s*\t*(\d+) compare < 600 && n:^\s*\t*unlock_time\s*\t*=\s*\t*(\d+) compare > 0'
