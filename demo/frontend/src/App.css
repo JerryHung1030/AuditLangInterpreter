@@ -1,0 +1,71 @@
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes bounceIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .animate-bounceIn {
+    animation: bounceIn 1s ease-in-out;
+  }
+  
+  .animate-typewriter {
+    animation: typewriter 4s steps(44) 1 normal both;
+  }
+  
+  .fixed-title {
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 10;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(
+      270deg,
+      #ffea00, /* Bright yellow */
+      #00e6ff, /* Cyan blue */
+      #00f7ff, /* Light blue */
+      #00bfff, /* Soft blue */
+      #00e6ff, /* Cyan blue */
+      #ffea00, /* Bright yellow */
+      #ffea00, /* Repeat for smooth looping */
+      #00e6ff, /* Cyan blue */
+      #00f7ff, /* Light blue */
+      #00bfff, /* Soft blue */
+      #00e6ff /* Cyan blue */
+    );
+    background-size: 300% 300%;
+    animation: gradient-animation 6s ease infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .max-w-custom {
+    max-width: 100rem; /* Adjust this value as needed */
+  }

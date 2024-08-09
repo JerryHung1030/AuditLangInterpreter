@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'MonoLisa';
+    src: url('./fonts/MonoLisaStatic-NoScript-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'MonoLisa';
+    src: url('./fonts/MonoLisaStatic-NoScript-RegularItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'MonoLisa';
+    src: url('./fonts/MonoLisaStatic-NoScript-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'MonoLisa';
+    src: url('./fonts/MonoLisaStatic-NoScript-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'MonoLisaScript';
+    src: url('./fonts/MonoLisaStatic-Script-RegularItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'MonoLisaScript';
+    src: url('./fonts/MonoLisaStatic-Script-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+  }
+  
