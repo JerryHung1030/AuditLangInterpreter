@@ -45,15 +45,12 @@ import yaml
 import json
 import os
 from typing import Dict
-from rule_exec_engine.semantic_tree_builder import (
-    ExecutionNode,
-    ContentRule,
-    FileRule,
-    DirectoryRule,
-    CommandRule,
-    ProcessRule,
-    RegistryRule,
-    ConditionNode,
+import sys
+
+# Add the src directory to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from semantic_tree_builder import (
     SemanticTreeBuilder,
     SemanticTreeError
 )

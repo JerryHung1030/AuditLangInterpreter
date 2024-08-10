@@ -22,7 +22,7 @@ checks:
         file_rules:
           - execution_node:
               type: 'f'
-              main_target: null
+              main_target: '/etc/rsyslog.d'
               sub_target: null
               target_pattern: '\.*.conf'
             content_rules:
@@ -92,7 +92,7 @@ checks:
         file_rules:
           - execution_node:
               type: 'f'
-              main_target: null
+              main_target: '/etc/ssh/sshd_config.d'
               sub_target: null
               target_pattern: '\.*'
             content_rules:
@@ -127,7 +127,7 @@ checks:
         file_rules:
           - execution_node:
               type: 'f'
-              main_target: null
+              main_target: '/etc/sudoers.d'
               sub_target: null
               target_pattern: '\.*'
             content_rules:
@@ -359,7 +359,7 @@ checks:
         file_rules:
           - execution_node:
               type: 'f'
-              main_target: null
+              main_target: '/boot'
               sub_target: null
               target_pattern: '\.*grub.cfg'
             content_rules:

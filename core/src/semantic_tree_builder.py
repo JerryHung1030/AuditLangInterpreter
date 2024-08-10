@@ -301,9 +301,10 @@ class SemanticTreeBuilder:
 
                 if file_rule_part.startswith('r:'):
                     pattern = file_rule_part[2:].strip()  # remove 'r:'
-                    execution_node_f = ExecutionNode(type='f', main_target=None, target_pattern=pattern)
                 else:
-                    execution_node_f = ExecutionNode(type='f', main_target=file_rule_part)
+                    pattern = file_rule_part
+
+                execution_node_f = ExecutionNode(type='f', main_target=directory, target_pattern=pattern)
 
                 # Process content rules if a second '->' exists
                 content_rules = []

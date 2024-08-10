@@ -139,9 +139,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "fakefile"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "fakefile"
             content_rules:
               - content_operator: "r"
                 value: "^Wazuh"
@@ -162,9 +162,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "ossec.conf"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "ossec.conf"
             content_rules: []
             negation: false
         negation: false
@@ -180,9 +180,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "ossec.conf"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "ossec.conf"
             content_rules: []
             negation: true
         negation: false
@@ -198,9 +198,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "ossec.conf"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "ossec.conf"
             content_rules: []
             negation: false
         negation: false
@@ -216,9 +216,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "fakefile"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "fakefile"
             content_rules: []
             negation: true
         negation: false
@@ -234,9 +234,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "fakefile"
+              main_target: "/var/ossec"
               sub_target: null
-              target_pattern: null
+              target_pattern: "fakefile"
             content_rules: []
             negation: false
         negation: false
@@ -252,9 +252,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: "ossec.conf"
+              main_target: "/var/ossec/fakedir"
               sub_target: null
-              target_pattern: null
+              target_pattern: "ossec.conf"
             content_rules: []
             negation: true
         negation: false
@@ -270,7 +270,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset/fakedir"
               sub_target: null
               target_pattern: "FAKE"
             content_rules: []
@@ -284,7 +284,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/etc/fakedir"
               sub_target: null
               target_pattern: "FAKE"
             content_rules: []
@@ -298,7 +298,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc/fakedir"
               sub_target: null
               target_pattern: "FAKE"
             content_rules: []
@@ -315,7 +315,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -329,7 +329,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -343,7 +343,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -361,7 +361,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -375,7 +375,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -389,7 +389,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -406,7 +406,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -420,7 +420,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -434,7 +434,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc/fakedir"
               sub_target: null
               target_pattern: "ossec"
             content_rules: []
@@ -451,7 +451,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset"
               sub_target: null
               target_pattern: "ossec.conf"
             content_rules: []
@@ -465,7 +465,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/logs"
               sub_target: null
               target_pattern: "ossec.conf"
             content_rules: []
@@ -479,7 +479,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "ossec.conf"
             content_rules: []
@@ -496,7 +496,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -510,7 +510,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/logs"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -524,7 +524,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -541,7 +541,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/ruleset"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -555,7 +555,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/fakedir"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -569,7 +569,7 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/var/ossec/etc"
               sub_target: null
               target_pattern: "fake.conf"
             content_rules: []
@@ -587,9 +587,9 @@ checks:
         file_rules:
           - execution_node:
               type: "f"
-              main_target: null
+              main_target: "/boot"
               sub_target: null
-              target_pattern: \.*grub.cfg
+              target_pattern: "\\.*grub.cfg"
             content_rules:
               - content_operator: "r"
                 value: "^\\s*\\t*linux"

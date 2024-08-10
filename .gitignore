@@ -2,5 +2,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
-demo/node_modules/
-demo/package-lock.json
+demo/frontend/node_modules/
+demo/frontend/package-lock.json

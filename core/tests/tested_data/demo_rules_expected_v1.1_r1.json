@@ -33,7 +33,7 @@
             {
               "execution_node": {
                 "type": "f",
-                "main_target": null,
+                "main_target": "/etc/rsyslog.d",
                 "sub_target": null,
                 "target_pattern": "\\.*.conf"
               },
@@ -138,7 +138,7 @@
             {
               "execution_node": {
                 "type": "f",
-                "main_target": null,
+                "main_target": "/etc/ssh/sshd_config.d",
                 "sub_target": null,
                 "target_pattern": "\\.*"
               },
@@ -191,7 +191,7 @@
             {
               "execution_node": {
                 "type": "f",
-                "main_target": null,
+                "main_target": "/etc/sudoers.d",
                 "sub_target": null,
                 "target_pattern": "\\.*"
               },
@@ -539,7 +539,7 @@
             {
               "execution_node": {
                 "type": "f",
-                "main_target": null,
+                "main_target": "/boot",
                 "sub_target": null,
                 "target_pattern": "\\.*grub.cfg"
               },
