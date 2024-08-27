@@ -1,0 +1,708 @@
+{
+  "os_type": "linux",
+  "checks": [
+    {
+      "id": 28623,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/rsyslog.conf",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*\\$FileCreateMode 0640",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "d",
+            "main_target": "/etc/rsyslog.d",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "file_rules": [
+            {
+              "execution_node": {
+                "type": "f",
+                "main_target": "/etc/rsyslog.d",
+                "sub_target": null,
+                "target_pattern": "\\.*.conf"
+              },
+              "content_rules": [
+                {
+                  "content_operator": "r",
+                  "value": "^\\s*\\t*\\$FileCreateMode 0640",
+                  "compare_operator": null,
+                  "compare_value": null,
+                  "negation": false
+                }
+              ],
+              "negation": false
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28632,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/cron.deny",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [],
+          "negation": true
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "stat /etc/cron.allow",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "Access:\\s*\\t*\\(0640/-rw-r-----\\)\\s*\\t*Uid:\\s*\\t*\\(\\s*\\t*0/\\s*\\t*root\\)\\s*\\t*Gid:\\s*\\t*\\(\\s*\\t*0/\\s*\\t*root\\)",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28635,
+      "condition": "any",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "sshd -T",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*Allowusers\\s*\\t*\\w+|^\\s*\\t*Denyusers\\s*\\t*\\w+|^\\s*\\t*Allowgroups\\s*\\t*\\w+|^\\s*\\t*Denygroups\\s*\\t*\\w+",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/ssh/sshd_config",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*Allowusers\\s*\\t*\\w+|^\\s*\\t*Denyusers\\s*\\t*\\w+|^\\s*\\t*Allowgroups\\s*\\t*\\w+|^\\s*\\t*Denygroups\\s*\\t*\\w+",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "d",
+            "main_target": "/etc/ssh/sshd_config.d",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "file_rules": [
+            {
+              "execution_node": {
+                "type": "f",
+                "main_target": "/etc/ssh/sshd_config.d",
+                "sub_target": null,
+                "target_pattern": "\\.*"
+              },
+              "content_rules": [
+                {
+                  "content_operator": "r",
+                  "value": "^\\s*\\t*Allowusers\\s*\\t*\\w+|^\\s*\\t*Denyusers\\s*\\t*\\w+|^\\s*\\t*Allowgroups\\s*\\t*\\w+|^\\s*\\t*Denygroups\\s*\\t*\\w+",
+                  "compare_operator": null,
+                  "compare_value": null,
+                  "negation": false
+                }
+              ],
+              "negation": false
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28657,
+      "condition": "none",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/sudoers",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*NOPASSWD",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "d",
+            "main_target": "/etc/sudoers.d",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "file_rules": [
+            {
+              "execution_node": {
+                "type": "f",
+                "main_target": "/etc/sudoers.d",
+                "sub_target": null,
+                "target_pattern": "\\.*"
+              },
+              "content_rules": [
+                {
+                  "content_operator": "r",
+                  "value": "^\\s*\\t*NOPASSWD",
+                  "compare_operator": null,
+                  "compare_value": null,
+                  "negation": false
+                }
+              ],
+              "negation": false
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28534,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/boot/grub/grub.cfg",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*linux",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            },
+            {
+              "content_operator": "r",
+              "value": "apparmor=1",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/boot/grub/grub.cfg",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*linux",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            },
+            {
+              "content_operator": "r",
+              "value": "security=apparmor",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/boot/grub/grub.cfg",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*linux",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            },
+            {
+              "content_operator": "r",
+              "value": "apparmor=1",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": true
+            }
+          ],
+          "negation": true
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/boot/grub/grub.cfg",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*linux",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            },
+            {
+              "content_operator": "r",
+              "value": "security=apparmor",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": true
+            }
+          ],
+          "negation": true
+        }
+      ]
+    },
+    {
+      "id": 28536,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "^(\\d+)\\s+profiles\\s+are\\s+loaded",
+              "compare_operator": ">",
+              "compare_value": "0",
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "^(\\d+)\\s+profiles\\s+are\\s+in\\s+enforce\\s+mode",
+              "compare_operator": ">",
+              "compare_value": "0",
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^0\\s+profiles\\s+are\\s+in\\s+kill\\s+mode",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^0\\s+profiles\\s+are\\s+in\\s+unconfined\\s+mode",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^0\\s*profiles\\s+are\\s+in\\s+complain\\s+mode",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "apparmor_status",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^0\\s*processes\\s+are\\s+unconfined",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28606,
+      "condition": "none",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/audit/auditd.conf",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "log_group\\s*\\t*=",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            },
+            {
+              "content_operator": "r",
+              "value": "adm|root",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": true
+            }
+          ],
+          "negation": false
+        }
+      ]
+    },
+    {
+      "id": 28531,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "systemctl is-enabled apport.service",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "disabled",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/default/apport",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "enabled=(\\d+)",
+              "compare_operator": "!=",
+              "compare_value": "0",
+              "negation": false
+            }
+          ],
+          "negation": true
+        },
+        {
+          "execution_node": {
+            "type": "c",
+            "main_target": "systemctl is-active apport.service",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "active",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": true
+        }
+      ]
+    },
+    {
+      "id": 28592,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "d",
+            "main_target": "/boot",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "file_rules": [
+            {
+              "execution_node": {
+                "type": "f",
+                "main_target": "/boot",
+                "sub_target": null,
+                "target_pattern": "\\.*grub.cfg"
+              },
+              "content_rules": [
+                {
+                  "content_operator": "r",
+                  "value": "^\\s*\\t*linux",
+                  "compare_operator": null,
+                  "compare_value": null,
+                  "negation": false
+                },
+                {
+                  "content_operator": "r",
+                  "value": "audit=1",
+                  "compare_operator": null,
+                  "compare_value": null,
+                  "negation": true
+                }
+              ],
+              "negation": false
+            }
+          ],
+          "negation": true
+        }
+      ]
+    },
+    {
+      "id": 28662,
+      "condition": "all",
+      "rules": [
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/pam.d/common-auth",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*auth\\s*\\t*required\\s*\\t*pam_faillock.so\\s*\\t*preauth",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/pam.d/common-auth",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*auth\\s*\\t*[default=die]\\s*\\t*pam_faillock.so\\s*\\t*authfail",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/pam.d/common-auth",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*auth\\s*\\t*sufficient\\s*\\t*pam_faillock.so\\s*\\t*authsucc",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/pam.d/common-account",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "r",
+              "value": "^\\s*\\t*account\\s*\\t*required\\s*\\t*pam_faillock.so",
+              "compare_operator": null,
+              "compare_value": null,
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/security/faillock.conf",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "^\\s*\\t*deny\\s*\\t*=\\s*\\t*(\\d+)",
+              "compare_operator": "<=",
+              "compare_value": "4",
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/security/faillock.conf",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "^\\s*\\t*fail_interval\\s*\\t*=\\s*\\t*(\\d+)",
+              "compare_operator": "<=",
+              "compare_value": "900",
+              "negation": false
+            }
+          ],
+          "negation": false
+        },
+        {
+          "execution_node": {
+            "type": "f",
+            "main_target": "/etc/security/faillock.conf",
+            "sub_target": null,
+            "target_pattern": null
+          },
+          "content_rules": [
+            {
+              "content_operator": "n",
+              "value": "^\\s*\\t*unlock_time\\s*\\t*=\\s*\\t*(\\d+)",
+              "compare_operator": "<",
+              "compare_value": "600",
+              "negation": false
+            },
+            {
+              "content_operator": "n",
+              "value": "^\\s*\\t*unlock_time\\s*\\t*=\\s*\\t*(\\d+)",
+              "compare_operator": ">",
+              "compare_value": "0",
+              "negation": false
+            }
+          ],
+          "negation": true
+        }
+      ]
+    }
+  ]
+}
