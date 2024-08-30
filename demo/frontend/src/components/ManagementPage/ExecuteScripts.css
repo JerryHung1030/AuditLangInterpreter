@@ -1,0 +1,13 @@
+/* Ensure the MonoLisa font is imported in your main HTML or CSS file */
+
+/* Container styling */
+.execute-scripts-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #0a0f1c; /* Dark background to contrast with glowing elements */
+    position: relative; /* Relative positioning for decorative elements */
+    overflow: hidden; /* Hide overflowing decorative elements */
+}
+

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"  # Map port 3000 on the host to port 3000 in the container
+    stdin_open: true
+    tty: true
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"  # Map port 8080 on the host to port 8080 in the container
+    env_file: .env
+    environment:
+      - LOG_FILE_NAME=access.log
+    volumes:
+      - ./backend/logs:/app/logs  # Mount the host directory to store logs
+    stdin_open: true
+    tty: true

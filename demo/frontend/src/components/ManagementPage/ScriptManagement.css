@@ -1,0 +1,117 @@
+/* Ensure the MonoLisa font is imported in your main HTML or CSS file */
+
+/* Container styling */
+.script-management-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  background-color: #0a0f1c; /* Dark background to contrast with glowing elements */
+  position: relative; /* Relative positioning for decorative elements */
+  overflow: hidden; /* Hide overflowing decorative elements */
+}
+
+/* Dynamic gradient text */
+.dynamic-gradient-text {
+  font-size: 4rem; /* Reduced text size for smaller impact */
+  font-weight: bold;
+  font-family: 'MonoLisa', sans-serif !important; /* Custom font */
+  background: linear-gradient(270deg, #f0f700, #00e6ff, #00f7ff, #0039e6, #0033ff, #001eff, #f0f700, #00e6ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 5s ease infinite; /* Gradient animation */
+  transition: transform 0.3s ease-in-out; /* Smooth scaling effect on hover */
+  text-align: center; /* Center text alignment */
+}
+
+/* Hover effect for dynamic gradient text */
+.dynamic-gradient-text:hover {
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Gradient animation keyframes */
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Decorative elements to enhance visual appeal */
+.glowing-circles, .glowing-lines {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.1), 0 0 15px 10px rgba(255, 255, 255, 0.1), 0 0 20px 15px rgba(255, 255, 255, 0.1); /* Smaller shadows */
+  animation: glow-animation 6s ease-in-out infinite; /* Floating animation */
+}
+
+/* Different sizes and positions for circles */
+.glowing-circles:nth-child(2) {
+  width: 75px; /* Reduced size */
+  height: 75px; /* Reduced size */
+  top: 10%;
+  left: 15%;
+  animation-duration: 8s;
+}
+
+.glowing-circles:nth-child(3) {
+  width: 100px; /* Reduced size */
+  height: 100px; /* Reduced size */
+  bottom: 15%;
+  right: 10%;
+  animation-duration: 10s;
+}
+
+/* Floating animation for glowing circles */
+@keyframes glow-animation {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.1); /* Slightly reduced movement and scaling */
+  }
+}
+
+/* Glowing lines effect */
+.glowing-lines {
+  width: 1px; /* Reduced width */
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.5), rgba(0, 229, 255, 0));
+  animation: line-animation 8s linear infinite;
+}
+
+/* Different positions for lines */
+.glowing-lines:nth-child(4) {
+  top: 0;
+  left: 30%;
+  animation-duration: 12s;
+}
+
+.glowing-lines:nth-child(5) {
+  top: 0;
+  right: 25%;
+  animation-duration: 9s;
+}
+
+/* Line animation */
+@keyframes line-animation {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(200%);
+  }
+}

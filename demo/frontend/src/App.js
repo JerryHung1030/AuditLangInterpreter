@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import ScriptManagement from './components/ScriptManagement';
-import ExecuteScripts from './components/ExecuteScripts';
-import PrototypePage from './components/PrototypePage';
+import Dashboard from './components/Dashboard/Dashboard';
+import ScriptManagement from './components/ManagementPage/ScriptManagement';
+import ExecuteScripts from './components/ManagementPage/ExecuteScripts';
+import PrototypePage from './components/PrototypePage/PrototypePage';
 import 'tailwindcss/tailwind.css';
 import 'tw-elements/css/tw-elements.min.css';
 import './assets/fonts.css'; // Ensure fonts are imported

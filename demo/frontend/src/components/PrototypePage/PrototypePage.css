@@ -1,0 +1,802 @@
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Stepper overall margin */
+.custom-stepper {
+  margin-bottom: 24px; /* Equivalent to mb: 3 */
+}
+
+/* Step label styles */
+.step-label .MuiStepLabel-label {
+  font-family: 'MonoLisa'; /* Custom font */
+}
+
+.completed-step-label .MuiStepLabel-label {
+  color: lightblue !important; /* Color for completed steps */
+}
+
+.active-step-label .MuiStepLabel-label {
+  color: #FFD700 !important; /* Color for the active step */
+}
+
+.upcoming-step-label .MuiStepLabel-label {
+  color: lightblue !important; /* Color for upcoming steps */
+}
+
+/* Step icon styles */
+.active-step-icon {
+  color: #FFB300 !important; /* Icon color for the active step */
+}
+
+.inactive-step-icon {
+  color: #1976d2 !important; /* Icon color for inactive steps */
+}
+
+/* Icon and label container adjustments */
+.step-label .MuiStepLabel-iconContainer {
+  color: inherit; /* Inherits the correct color */
+}
+
+.active-step-label .MuiStepLabel-iconContainer,
+.upcoming-step-label .MuiStepLabel-iconContainer {
+  color: inherit; /* Adjust icon container color */
+}
+
+.Mui-active .MuiStepLabel-label {
+  color: #FFD700 !important; /* Specific active step label color */
+}
+
+.MuiStepLabel-iconContainer .MuiSvgIcon-root {
+  color: inherit; /* Ensure icons use the correct color for each step state */
+}
+
+
+/* MonoLisa font application */
+.mono-lisa-font {
+  font-family: 'MonoLisa', sans-serif !important;
+}
+
+/* Information box styling */
+.information-box {
+  padding: 16px;
+}
+
+/* Typography styles */
+.information-title {
+  margin-bottom: 16px;
+}
+
+.information-description {
+  margin-bottom: 16px;
+}
+
+/* Input wrapper styling */
+.input-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* Custom input styling */
+.custom-input {
+  min-width: 400px;
+}
+
+/* Select label styling */
+.select-label {
+  color: lightyellow !important;
+}
+
+/* Select box styling */
+.select-box {
+  font-family: 'MonoLisa';
+  color: lightyellow !important;
+  border-color: lightyellow;
+  padding-top: 0.5rem; /* Add padding top to give space for label */
+}
+.select-box .MuiSelect-icon {
+  color: lightyellow;
+}
+
+.select-box .MuiOutlinedInput-notchedOutline {
+  border-color: lightyellow !important; /* Ensure border color is set */
+  legend {
+    max-width: 0.01px; /* Hide legend border to avoid cutting through the label */
+  }
+}
+.select-box:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--mui-palette-primary-main);
+}
+
+.select-box.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--mui-palette-primary-main);
+}
+
+/* Select item styling */
+.select-item {
+}
+
+/* Box container */
+.rule-page-box {
+  padding: 16px;
+  font-family: 'MonoLisa';
+}
+
+/* Typography styles */
+.rule-page-title {
+  margin-bottom: 16px;
+  font-family: 'MonoLisa';
+}
+
+.rule-page-description {
+  margin-bottom: 16px;
+  font-family: 'MonoLisa';
+}
+
+/* Condition Select container */
+.condition-select-container {
+  margin-bottom: 16px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.condition-select {
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.select-label {
+  font-family: 'MonoLisa';
+  color: lightyellow !important;
+  background-color: #111827; /* Same as input background to blend in */
+  padding: 0 4px; /* Add padding to label to prevent overlap */
+  transform: translate(14px, -6px) scale(0.75); /* Adjust label position */
+}
+
+.select-box {
+  font-family: 'MonoLisa';
+  color: lightyellow !important;
+  border-color: lightyellow;
+}
+
+.select-item {
+  font-family: 'MonoLisa';
+  color: lightyellow;
+}
+
+/* Rules Input container */
+.rules-input-container {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.rule-item-container {
+  position: relative;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.rule-textarea {
+  height: 4rem;
+  resize: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  position: relative;
+  width: 100%;
+  color: lightyellow;
+  background-color: transparent;
+}
+
+/* Button styles */
+.delete-rule-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background-color: #f44336;
+  color: lightyellow;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rule-item-container:hover .delete-rule-button {
+  opacity: 1;
+}
+
+.add-rule-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.add-rule-button {
+  width: 100%;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 1rem;
+  color: lightyellow;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-rule-button:hover {
+  background-color: #333;
+  color: white;
+}
+
+.action-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gradientButtonHovered {
+  cursor: pointer;
+  margin-right: 8px;
+  transform: scale(0.99);
+}
+
+.manualButton {
+  cursor: pointer;
+  margin-left: 8px;
+  transform: scale(0.99);
+}
+
+
+
+
+
+.gradientButton {
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5), 0 0 20px rgba(240, 247, 0, 0.4); /* Glow effect */
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 229, 255, 0.5); /* Border with cyan color */
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'MonoLisa';
+  font-size: 1rem;
+  background-color: transparent; /* Transparent by default */
+}
+
+.gradientButtonHovered {
+  background: linear-gradient(
+    270deg,
+    #f0f700, /* Bright yellow */
+    #00e6ff, /* Cyan blue */
+    #00f7ff, /* Light blue */
+    #0039e6, /* Dark blue */
+    #0033ff, /* Bright blue */
+    #001eff, /* Deep blue */
+    #f0f700, /* Bright yellow */
+    #00e6ff /* Cyan blue */
+  );
+  background-size: 200% 200%;
+  animation: gradient-animation 20s ease infinite; /* Dynamic gradient only on hover */
+}
+
+.gradientButtonHovered:hover {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.8), 0 0 25px rgba(240, 247, 0, 0.6); /* Intensify glow on hover */
+}
+
+.manualButton {
+  background-color: transparent;
+  color: lightyellow;
+  border: 1px solid lightyellow;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'MonoLisa';
+  font-size: 1rem;
+}
+
+.manualButton:hover {
+  background-color: lightyellow; /* Light yellow background on hover */
+  color: black;
+}
+
+.magicRule {
+  background-color: transparent; /* No background color */
+  border: 2px solid rgba(0, 229, 255, 0.5); /* Cyan border with slight opacity */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5),
+    0 0 20px rgba(240, 247, 0, 0.4); /* Tech glow effect */
+  color: lightyellow; /* White text color */
+  outline: none; /* Remove default outline */
+  transition: box-shadow 0.3s ease, padding-right 0.3s ease, padding-left 0.3s ease; /* Smooth transition for box shadow and padding */
+  padding: 10px; /* Initial padding, adjust as needed */
+  position: relative; /* Position relative for button inside */
+  overflow: hidden; /* Prevent overflow issues */
+  display: flex; /* Flex display to align items */
+  align-items: center; /* Vertically center items */
+  padding-left: 10px; /* Adjust padding-left for content alignment */
+  height: 4rem; /* Maintain consistent height */
+}
+
+.magicRule:focus {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.8),
+    0 0 25px rgba(240, 247, 0, 0.6); /* Intensify glow on focus */
+}
+
+.magicRule:hover {
+  padding-left: 110px; /* Adjust padding-left to shift text for button space */
+}
+
+.gen-rule-button {
+  position: absolute;
+  left: 10px; /* Adjust the button's horizontal position */
+  top: 50%; /* Vertically center the button within its container */
+  transform: translateY(-50%); /* Align button in the middle vertically */
+  z-index: 11; /* Ensure button is above the textarea */
+  opacity: 0; /* Initially hidden */
+  transition: left 0.3s ease, opacity 0.3s ease; /* Smooth transition for appearance */
+  height: 32px; /* Adjust the button height to be smaller than textarea */
+  line-height: 32px; /* Vertically center text within button */
+  padding: 0 12px; /* Adjust padding for oval shape */
+  border-radius: 16px; /* Make it oval-shaped */
+  font-size: 0.85rem; /* Smaller font size for button */
+  cursor: pointer; /* Show pointer cursor */
+  font-family: 'MonoLisa'; /* Apply custom font */
+  background: linear-gradient(
+    270deg,
+    #f0f700, /* Bright yellow */
+    #00e6ff, /* Cyan blue */
+    #00f7ff, /* Light blue */
+    #0039e6, /* Dark blue */
+    #0033ff, /* Bright blue */
+    #001eff, /* Deep blue */
+    #f0f700, /* Bright yellow */
+    #00e6ff /* Cyan blue */
+  );
+  background-size: 200% 200%;
+  animation: gradient-animation 20s ease infinite;
+  color: lightyellow;
+  pointer-events: auto; /* Ensure button is always clickable */
+}
+
+.magicRule:hover .gen-rule-button,
+.magicRule:focus .gen-rule-button {
+  left: 10px; /* Move inside from the left when hovering over textarea */
+  opacity: 1; /* Make button visible */
+  pointer-events: auto; /* Ensure button remains clickable */
+}
+
+.manualRule {
+  background-color: transparent; /* No background color */
+  border: 1px solid lightyellow; /* Thinner white border */
+  border-radius: 8px; /* Rounded corners */
+  color: lightyellow; /* White text */
+  outline: none; /* Remove default outline */
+  transition: border 0.3s ease; /* Smooth transition for border */
+  padding: 10px; /* Add padding for better text spacing */
+}
+
+.text-shifted {
+  padding-left: 110px; /* Shift text slightly to the right when hovering */
+}
+
+.add-rule-container {
+  height: 48px; /* Adjust the height to make it slightly larger */
+}
+
+button.flex-1 {
+  height: 44px; /* Ensure buttons are slightly shorter than the container */
+}
+
+/* Box container */
+.target-system-page-box {
+  padding: 16px;
+  font-family: 'MonoLisa';
+}
+
+/* Typography styles */
+.target-system-page-title {
+  margin-bottom: 16px;
+  font-family: 'MonoLisa';
+}
+
+.target-system-page-description {
+  margin-bottom: 16px;
+  font-family: 'MonoLisa';
+}
+
+/* Input wrapper styling */
+.input-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+/* Custom input styling */
+.custom-input {
+  min-width: 400px;
+  border: 1px solid lightyellow;
+  border-radius: 4px;
+  color: lightyellow;
+  background-color: transparent;
+  padding: 0 12px;
+  font-family: 'MonoLisa';
+  font-size: 1rem;
+  outline: none;
+  height: 48px;
+}
+
+/* Select label styling */
+.select-label {
+  font-family: 'MonoLisa';
+  color: lightyellow !important;
+}
+
+/* Select box styling */
+.select-box {
+  font-family: 'MonoLisa';
+  color: lightyellow !important;
+  border-color: lightyellow;
+}
+
+/* Input group styling */
+.input-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-group .custom-input {
+  flex: 1;
+}
+
+.input-group .at-symbol {
+  padding: 0 8px;
+  color: lightyellow;
+  border: 1px solid lightyellow;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+}
+
+/* Password input styling */
+.password-input {
+  position: relative;
+}
+
+.password-input .custom-input {
+  padding-right: 40px;
+}
+
+.password-input .eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: lightyellow;
+  width: 24px;
+  height: 24px;
+}
+
+.password-input-spacing {
+  margin-top: 20px; /* Adjust this value as needed for desired spacing */
+}
+
+/* Ensure inputs and selects have consistent styling */
+.custom-input,
+.custom-select .MuiOutlinedInput-root {
+  height: 48px; /* Set a consistent height for inputs and selects */
+  border: 1px solid lightyellow; /* Use thinner lightyellow border */
+  border-radius: 4px; /* Add rounded corners */
+  color: lightyellow; /* Text color for input values */
+  background-color: transparent; /* Transparent background */
+  outline: none; /* Remove default outline */
+  padding: 0 12px; /* Add padding for better text spacing */
+  font-family: 'MonoLisa'; /* Apply custom font */
+  font-size: 1rem; /* Set font size */
+  width: 100%; /* Ensure full width for consistency */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.custom-input::placeholder {
+  color: lightyellow; /* Placeholder color */
+  opacity: 0.8; /* Slightly transparent for the placeholder */
+}
+
+.custom-input:focus,
+.custom-select .MuiOutlinedInput-root.Mui-focused {
+  border-color: #FFD700; /* Change border color on focus */
+}
+
+.custom-select .MuiSelect-select {
+  padding: 12px; /* Ensure consistent padding */
+  color: lightyellow; /* Text color for select values */
+}
+
+.custom-select .MuiSelect-icon {
+  color: lightyellow; /* Icon color */
+}
+
+.custom-select .MuiOutlinedInput-notchedOutline {
+  border-color: lightyellow !important; /* Lightyellow border for select */
+}
+
+.custom-select:hover .MuiOutlinedInput-notchedOutline,
+.custom-input:hover {
+  border-color: #FFD700; /* Hover effect border color */
+}
+
+.input-group {
+  display: flex; /* Use flexbox to align inputs */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Ensure the input group takes full width */
+}
+
+.input-group input {
+  flex: 1; /* Ensure input fields share the available space equally */
+  min-width: 0; /* Prevent input from overflowing parent container */
+}
+
+.input-group .at-symbol {
+  padding: 0 8px; /* Padding around @ symbol */
+  color: lightyellow; /* Color for @ symbol */
+  border: 1px solid lightyellow; /* Match border with inputs */
+  height: 48px; /* Match height with inputs */
+  display: flex; /* Flexbox for centering content */
+  align-items: center; /* Center content vertically */
+  background-color: transparent; /* Transparent background */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Password input with eye icon */
+.password-input {
+  position: relative; /* Relative positioning for eye icon */
+}
+
+.password-input input {
+  padding-right: 40px; /* Add space for the eye icon */
+}
+
+.password-input .eye-icon {
+  position: absolute; /* Position absolutely inside the input */
+  right: 10px; /* Align icon to the right */
+  top: 50%; /* Center icon vertically */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+  cursor: pointer; /* Pointer cursor for interactivity */
+  color: lightyellow; /* Match color */
+  width: 24px; /* Size the icon */
+  height: 24px; /* Size the icon */
+}
+
+/* Progress Tracker */
+.progress-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px; /* Convert 2rem to px for consistency */
+  position: relative;
+}
+
+.progress-stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.progress-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-bottom: 8px; /* Convert 1rem to px for consistency */
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  background-color: #1976d2; /* Default color */
+}
+
+.active-dot {
+  background-color: #FFD700;
+  transform: scale(1.2);
+  box-shadow: 0 0 10px #FFD700;
+}
+
+.progress-text {
+  font-family: 'MonoLisa';
+  font-size: 0.75rem;
+  text-align: center;
+  color: lightyellow;
+}
+
+.active-text {
+  color: #FFD700;
+}
+
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background-color: #1976d2; /* Default color */
+  transition: width 0.3s ease-in-out;
+  position: relative;
+  top: 10px;
+  margin-left: 8px; /* Convert margin values to px */
+  margin-right: 8px; /* Convert margin values to px */
+  width: 0%;
+  transform-origin: left center;
+}
+
+.active-line {
+  background-color: #FFD700;
+  width: 100%;
+}
+
+/* audit result*/
+/* Box container for audit result */
+.audit-result-page-box {
+  padding: 16px;
+  font-family: 'MonoLisa';
+  width: 100%;
+  margin: 0 auto;
+}
+
+.audit-result-page-title {
+  margin-bottom: 16px;
+  font-family: 'MonoLisa';
+  text-align: left;
+}
+
+.audit-result-page-description {
+  font-family: 'MonoLisa';
+  margin-bottom: 32px; /* Increased bottom margin for spacing */
+  text-align: left;
+}
+
+.audit-summary-box, .audit-genai-summary-box, .script-info-box, .automation-results-box, .endpoint-info-box {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.audit-summary-table, .audit-genai-summary-table, .script-info-table, .automation-results-table, .endpoint-info-table {
+  width: 100%;
+  color: lightyellow;
+  font-family: 'MonoLisa';
+  border-collapse: collapse;
+  border: 1px solid lightyellow;
+  margin-bottom: 20px;
+}
+
+.audit-summary-table-cell-left, .audit-summary-table-cell-right, .script-info-cell, .automation-results-cell-left, .automation-results-cell-center, .endpoint-info-cell {
+  padding: 16px;
+  border-bottom: 1px solid lightyellow;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.pie-chart-container {
+  margin: 0 auto;
+  width: fit-content;
+  height: 100%;
+}
+
+.audit-pass-text {
+  font-family: 'MonoLisa';
+  color: lightgreen;
+}
+
+.audit-fail-text {
+  font-family: 'MonoLisa';
+  color: lightcoral;
+}
+
+.genai-summary-header, .script-info-header, .automation-results-header, .endpoint-info-header {
+  padding: 16px;
+  border-bottom: 1px solid lightyellow;
+  text-align: center;
+  font-weight: bold;
+  color: lightyellow;
+  background-color: #1b2735;
+}
+
+.genai-summary-content, .endpoint-info-cell {
+  padding: 8px;
+  border-bottom: 1px solid lightyellow;
+  text-align: left;
+  color: lightyellow;
+}
+
+.script-info-cell-bold, .endpoint-info-cell-bold {
+  padding: 8px;
+  border-bottom: 1px solid lightyellow;
+  width: 30%;
+  font-weight: bold;
+  color: lightyellow;
+}
+
+.text-pass {
+  color: lightgreen;
+}
+
+.text-fail {
+  color: lightcoral;
+}
+
+.automation-results-cell-center {
+  text-align: center;
+  padding: 8px;
+  border-bottom: 1px solid lightyellow;
+}
+
+.automation-results-cell-left {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid lightyellow;
+}
+  
+@keyframes grow-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0b2f52 #111827;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #0b2f52;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}

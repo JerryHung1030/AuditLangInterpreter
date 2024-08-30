@@ -1,0 +1,97 @@
+###
+# Validate Script Description
+POST http://127.0.0.1:8080/api/v1/scripts/validate_description HTTP/1.1
+
+{
+    "script_name": "Example Script",
+    "description": "This script is used to...",
+    "rationale": "The reason for this script...",
+    "mitigation": "Steps to mitigate...",
+    "detection_method": "auto",
+    "os_version": "ubuntu 22.04",
+    "compliances": [
+        {
+            "name": "NIST 800-53r5",
+            "control_list": ["AC-3", "AU-6"]
+        },
+        {
+            "name": "NIST 800-53r5",
+            "control_list": ["A.12.1", "A.12.2"]
+        }
+    ]
+}
+
+
+###
+# Validate Script Rules
+POST http://127.0.0.1:8080/api/v1/scripts/validate_rules HTTP/1.1
+
+{
+    "condition": "all",
+    "rule_list": ["rule1", "rule2"]
+}
+
+
+###
+# Execute Audit
+POST http://127.0.0.1:8080/api/v1/audit/execute HTTP/1.1
+
+{
+    "scripts": [
+        {
+            "script_name": "Example Script",
+            "description": "This script is used to...",
+            "rationale": "The reason for this script...",
+            "mitigation": "Steps to mitigate...",
+            "detection_method": "auto",
+            "os_version": "ubuntu 22.04",
+            "compliances": [
+                {
+                    "name": "NIST 800-53r5",
+                    "control_list": ["AC-3", "AU-6"]
+                },
+                {
+                    "name": "ISO 27001",
+                    "control_list": ["A.12.1", "A.12.2"]
+                }
+            ],
+            "rules": ["rule1", "rule2"]
+        }
+    ],
+    "ssh_info": {
+        "target_system_name": "Target System",
+        "target_system_type": "ubuntu 22.04",
+        "port": 22,
+        "username": "user",
+        "ip": "192.168.0.1",
+        "password": "encrypted_password"
+    }
+}
+
+
+###
+# Query Audit Status
+GET http://127.0.0.1:8080/api/v1/audit/status/12345 HTTP/1.1
+
+
+###
+# Query Audit Results
+GET http://127.0.0.1:8080/api/v1/audit/result/12345 HTTP/1.1
+
+
+###
+# Convert Natural Language to Rule
+POST http://127.0.0.1:8080/api/v1/rules/convert HTTP/1.1
+
+{
+    "description": "This is a rule description."
+}
+
+
+###
+# Q&A Answering
+POST http://127.0.0.1:8080/api/v1/qa/ask HTTP/1.1
+
+{
+    "question": "What is the best practice for secure coding?"
+}
