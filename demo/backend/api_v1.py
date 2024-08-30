@@ -73,6 +73,9 @@ from script_validator import ScriptValidator, ValidationError
 from script_processor import ScriptProcessorError
 from semantic_tree_executor import ExecutionError, SSHManager, OSCommandBuilder, ExecutionResult, ExecutionNodeExecutor, ContentCheckResult, ContentRuleChecker, SemanticTreeExecutionResult, SemanticTreeExecutor
 import asyncio
+from cryptography.fernet import Fernet
+import hashlib
+import base64
 
 router = APIRouter()
 current_id = 0
@@ -502,6 +505,21 @@ Composite rules allow combining multiple checks in a single statement. For examp
 
 """
 
+def generate_key_from_filename(filename):
+    hash_object = hashlib.sha256(filename.encode())
+    key = base64.urlsafe_b64encode(hash_object.digest()[:32])
+    return key
+
+def encrypt_password(password, key):
+    fernet = Fernet(key)
+    encrypted = fernet.encrypt(password.encode())
+    return encrypted
+
+def decrypt_password(encrypted_password, key):
+    fernet = Fernet(key)
+    decrypted = fernet.decrypt(encrypted_password).decode()
+    return decrypted
+
 # # Validate Script Description
 # @router.post('/scripts/validate_description')
 # async def validate_description(request: Request):
@@ -636,13 +654,16 @@ async def execute_audit(audit_request: AuditRequest):
 
         task_id_val = generate_unique_id()
 
-        request_json_file = f"{task_id_val}_request.json"
-        with open(request_json_file, 'w') as f:
-            json.dump(data, f, indent=4)
+        # request_json_file = f"{task_id_val}_request.json"
+        # with open(request_json_file, 'w') as f:
+        #     json.dump(data, f, indent=4)
 
         ssh_info = data.get('ssh_info')
         if ssh_info is not None:
-            pass
+            hostname = ssh_info.get('ip')
+            username = ssh_info.get('username')
+            password = ssh_info.get('password')
+            port = ssh_info.get('port', 22)  # Default to port 22 if not provided
         else:
             return_obj['error'] = 'ssh_info cannot be empty'
             return return_obj
@@ -689,11 +710,11 @@ async def execute_audit(audit_request: AuditRequest):
                 "checks": [tree_json]
             }
 
-            tree_json_file = f"{task_id_val}_tree.json"
-            with open(tree_json_file, 'w') as f:
-                f.write(json.dumps(results, indent=4))
+            # tree_json_file = f"{task_id_val}_tree.json"
+            # with open(tree_json_file, 'w') as f:
+            #     f.write(json.dumps(results, indent=4))
 
-            executor = SemanticTreeExecutor(hostname='192.168.70.150', username='jerryhung', password='systemadmin!23', port=22)
+            executor = SemanticTreeExecutor(hostname=hostname, username=username, password=password, port=port)
             debug_print(f"Initialized SemanticTreeExecutor with hostname: {executor.ssh_manager.hostname}")
 
             try:
@@ -715,6 +736,11 @@ async def execute_audit(audit_request: AuditRequest):
             result_data['execution_results'] = execution_results.results
 
             result_json_file = f"{task_id_val}_result.json"
+            key = generate_key_from_filename(result_json_file)
+
+            if 'ssh_info' in result_data:
+                result_data['ssh_info']['password'] = encrypt_password(result_data['ssh_info']['password'], key).decode()
+
             with open(result_json_file, 'w') as f:
                 json.dump(result_data, f, indent=4)
 
@@ -777,8 +803,6 @@ async def execute_audit(audit_request: AuditRequest):
 #         return_obj['error'] = 'System problem,please contact administrator'
 #         return return_obj
 
-
-# Query Audit Results
 @router.get('/audit/result')
 async def query_audit_results():
     try:
@@ -791,8 +815,16 @@ async def query_audit_results():
                 "error_message": f"Result file for task_id {current_id} not found."
             }
 
+        key = generate_key_from_filename(result_json_file)
+
         with open(result_json_file, 'r') as f:
             audit_results = json.load(f)
+
+        # Decrypt the SSH password if it exists
+        if 'ssh_info' in audit_results:
+            encrypted_password = audit_results['ssh_info'].get('password', None)
+            if encrypted_password:
+                audit_results['ssh_info']['password'] = decrypt_password(encrypted_password, key)
 
         return audit_results
 
