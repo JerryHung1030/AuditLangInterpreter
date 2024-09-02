@@ -11,7 +11,8 @@
     Author:       Jerry Hung
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-08
-    Version:      1.0.0
+    Last Updated: 2024-09-02
+    Version:      1.0.1
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -43,38 +44,65 @@ from script_processor import ScriptProcessor
 
 logging.basicConfig(level=logging.INFO)
 
-def main(file_path: str):
+def main(file_path: str, ssh_details: dict):
     try:
-        # Step 1: Read the YAML file content
+        # Step 1: Read the YAML file content :)
         with open(file_path, "r") as file:
             file_content = file.read()
 
-        # Step 2: Process the file content using ScriptProcessor
+        # Step 2: Initialize ScriptProcessor :)
         processor = ScriptProcessor()
-        result = processor.process(file_content)
 
-        # Step 3: Check and print the result
-        if isinstance(result, dict) and result.get("status") == "error":
+        # Step 3: Process the file content to generate the semantic tree JSON :)
+        tree_json = processor.process(file_content)
+
+        # Step 4: Check if processing resulted in an error :)
+        if isinstance(tree_json, dict) and tree_json.get("status") == "error":
             # Print the error details if processing failed
+            logging.error(f"Error Code: {tree_json.get('error_code')}")
+            logging.error(f"Error Message: {tree_json.get('error_message')}")
+            logging.error(f"Details: {tree_json.get('details')}")
+            sys.exit(1)
+        else:
+            # Log the generated tree JSON string if processing succeeded :)
+            logging.info("Generated Tree JSON:")
+            print(tree_json)
+
+        # Step 5: Execute the semantic tree using the executor method :)
+        result = processor.executor(tree_json, ssh_details)
+
+        # Step 6: Check and print the execution result :)
+        if isinstance(result, dict) and result.get("status") == "error":
+            # Print the error details if execution failed
             logging.error(f"Error Code: {result.get('error_code')}")
             logging.error(f"Error Message: {result.get('error_message')}")
             logging.error(f"Details: {result.get('details')}")
             sys.exit(1)
         else:
-            # Print the generated tree JSON string if processing succeeded
-            logging.info("Generated Tree JSON:")
+            # Print the execution results if succeeded
+            logging.info("Execution Results:")
             print(result)
 
     except FileNotFoundError:
         logging.error(f"Error: The file '{file_path}' was not found.")
         sys.exit(2)
+    except KeyError as e:
+        logging.error(f"Missing required SSH detail: {str(e)}")
+        sys.exit(3)
     except Exception as e:
         logging.error(f"An unexpected error occurred: {str(e)}")
-        sys.exit(3)
+        sys.exit(4)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python main.py <path_to_yml_file>")
-        sys.exit(4)
+    if len(sys.argv) < 6:
+        print("Usage: python main.py <path_to_yml_file> <hostname> <username> <password> <port>")
+        sys.exit(5)
     else:
-        main(sys.argv[1])
+        file_path = sys.argv[1]
+        ssh_details = {
+            'hostname': sys.argv[2],
+            'username': sys.argv[3],
+            'password': sys.argv[4],
+            'port': int(sys.argv[5])
+        }
+        main(file_path, ssh_details)

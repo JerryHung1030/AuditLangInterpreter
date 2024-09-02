@@ -12,7 +12,8 @@
     Author:       Jerry Hung
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-08
-    Version:      1.0.0
+    Last Updated: 2024-09-02
+    Version:      1.0.1
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -41,11 +42,13 @@ from enum import Enum
 
 from script_validator import ScriptValidator, ValidationError
 from semantic_tree_builder import SemanticTreeBuilder, SemanticTreeError
+from semantic_tree_executor import SemanticTreeExecutor, SemanticTreeExecutionResult
 
 class ScriptProcessorError(Enum):
     FILE_VALIDATION_FAILED = ("P001", "File validation failed")
     TREE_BUILDING_FAILED = ("P002", "Tree building failed")
-    UNKNOWN_ERROR = ("P003", "Unknown error")
+    EXECUTION_FAILED = ("P003", "Execution failed")
+    UNKNOWN_ERROR = ("P004", "Unknown error")
 
 class ScriptProcessor:
     def __init__(self):
@@ -54,10 +57,10 @@ class ScriptProcessor:
 
     def process(self, file_content: str) -> Union[str, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]]:
         try:
-            # Step 1: Validate the YAML file
+            # Step 1: Validate the YAML file :)
             script_data = self.validator.validate_file(file_content)
             
-            # Step 2: Build the semantic tree for each check in the script
+            # Step 2: Build the semantic tree for each check in the script :)
             results = []
             for check in script_data['checks']:
                 tree = self.tree_builder.build_tree({
@@ -66,7 +69,7 @@ class ScriptProcessor:
                     'rules': check['rules']
                 })
                 
-                # Step 3: Check for errors during tree building
+                # Step 3: Check for errors during tree building :)
                 if tree is None:
                     errors = self.tree_builder.get_errors()
                     return {
@@ -77,7 +80,7 @@ class ScriptProcessor:
                     }
                 results.append(self.tree_builder.tree_to_json(tree))
             
-            # Step 4: Return the JSON string of the tree if all checks passed
+            # Step 4: Return the JSON string of the tree if all checks passed :)
             return json.dumps(results, separators=(',', ':'))
         
         except ValidationError as sve:
@@ -88,6 +91,53 @@ class ScriptProcessor:
                 "details": sve.errors
             }
         
+        except Exception as e:
+            return {
+                "status": "error",
+                "error_code": ScriptProcessorError.UNKNOWN_ERROR.value[0],
+                "error_message": ScriptProcessorError.UNKNOWN_ERROR.value[1],
+                "details": str(e)
+            }
+
+    def executor(self, tree_json: str, ssh_details: Dict[str, Union[str, int]]) -> Dict[str, Union[str, Dict]]:
+        try:
+            # Step 1: Convert JSON string to a Python dictionary for execution :)
+            semantic_tree = json.loads(tree_json)
+
+            # Step 2: Initialize the SemanticTreeExecutor with SSH details :)
+            executor = SemanticTreeExecutor(
+                hostname=ssh_details['hostname'],
+                username=ssh_details['username'],
+                password=ssh_details['password'],
+                port=ssh_details.get('port', 22)
+            )
+
+            # Step 3: Execute the semantic tree :)
+            execution_result = executor.execute_tree(semantic_tree)
+
+            # Step 4: Check for success or handle errors in execution :)
+            if not execution_result.success:
+                return {
+                    "status": "error",
+                    "error_code": ScriptProcessorError.EXECUTION_FAILED.value[0],
+                    "error_message": execution_result.error or ScriptProcessorError.EXECUTION_FAILED.value[1],
+                    "details": execution_result.results
+                }
+
+            # Step 5: Return the successful execution results :)
+            return {
+                "status": "success",
+                "results": execution_result.results
+            }
+
+        except SemanticTreeError as ste:
+            return {
+                "status": "error",
+                "error_code": ScriptProcessorError.TREE_BUILDING_FAILED.value[0],
+                "error_message": ScriptProcessorError.TREE_BUILDING_FAILED.value[1],
+                "details": str(ste)
+            }
+
         except Exception as e:
             return {
                 "status": "error",

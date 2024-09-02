@@ -10,8 +10,8 @@
     Author:       Jerry Hung, Bolt Lin
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
-    Last Updated: 2024-08-11
-    Version:      0.1.1
+    Last Updated: 2024-08-29
+    Version:      0.1.2
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -275,12 +275,18 @@ class ExecutionNodeExecutor:
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
-            if self.os_type == "linux":                                         # for test use, need to be revised
-                command = "export LC_ALL=C && echo systemadmin!23 | sudo -S " + self.main_target   # for test use, need to be revised
+            if self.os_type == "linux":  # for test use, need to be revised
+                command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {self.main_target}"  # dynamically insert the password
             output, error, exit_status = ssh_manager.execute_command(command)
-            if exit_status != 0:
-                return ExecutionResult(success=False, error=f"Command failed with error: {error.strip()}")
-            return ExecutionResult(success=True, output=output.strip())
+            if output is not None and len(str(output).strip()) > 0 and error is not None and len(str(error).strip()) > 0:
+                return ExecutionResult(success=True, output=output.strip() + "\n" + error.strip())
+            if output is not None and len(str(output).strip()) > 0:
+                return ExecutionResult(success=True, output=output.strip())
+            else:
+                if error is not None and len(str(error).strip()) > 0:
+                    return ExecutionResult(success=True, output=error.strip())
+                else:
+                    return ExecutionResult(success=False, error="Command failed with no result")
         except Exception as e:
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
@@ -399,7 +405,7 @@ class ContentRuleChecker:
             command = self.command_builder.build_read_file_command(file_path)
 
             if self.os_type == "linux":
-                command = "export LC_ALL=C && echo systemadmin!23 | sudo -S " + command
+                command = f"export LC_ALL=C && echo {self.ssh_manager.password} | sudo -S " + command
             output, error, exit_status = self.ssh_manager.execute_command(command)
 
             if exit_status != 0:
@@ -451,7 +457,6 @@ class ContentRuleChecker:
             print(f"[DEBUG] Negation applied. Final match result: {match}")
 
         return match
-
 
     def numeric_compare(self, content: str, value: str) -> bool:
         try:
@@ -661,43 +666,3 @@ class SemanticTreeExecutor:
         else:
             print(f"Invalid condition: {condition}")
             return None
-
-def debug_print(message: str):
-    """
-    Print a debug message in a structured format.
-    """
-    print(f"[DEBUG] {message}")
-
-if __name__ == "__main__":
-    debug_print("Starting the semantic tree execution process...")
-
-    if len(sys.argv) != 2:
-        print("Usage: python3 semantic_tree_executor.py <expected_result_json_file>")
-        sys.exit(1)
-
-    json_file_path = sys.argv[1]
-    debug_print(f"JSON file path received: {json_file_path}")
-
-    # Initialize the semantic tree executor with SSH details
-    executor = SemanticTreeExecutor(hostname='192.168.70.150', username='jerryhung', password='systemadmin!23', port=22)
-    debug_print(f"Initialized SemanticTreeExecutor with hostname: {executor.ssh_manager.hostname}")
-
-    try:
-        # Load the semantic tree data from the specified file
-        debug_print(f"Loading semantic tree data from {json_file_path}...")
-        with open(json_file_path, 'r', encoding='utf-8') as f:
-            semantic_tree = json.load(f)
-        debug_print("Semantic tree data loaded successfully.")
-    except Exception as e:
-        debug_print(f"Failed to load semantic tree data: {str(e)}")
-        sys.exit(1)
-
-    # Execute the semantic tree and get results
-    debug_print("Executing the semantic tree...")
-    results = executor.execute_tree(semantic_tree)
-
-    if results.success:
-        debug_print("Semantic tree execution completed successfully.")
-        debug_print(f"Execution results: {results.results}")
-    else:
-        debug_print(f"Semantic tree execution failed with error: {results.error}")

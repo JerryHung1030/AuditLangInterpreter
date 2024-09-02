@@ -1,0 +1,249 @@
+checks:
+  # 4.2.2.4 Ensure rsyslog default file permissions are configured. (Automated)
+  - id: 28623
+    title: "確保配置了 rsyslog 預設檔權限。"
+    description: "RSyslog 將建立系統上尚未存在的日誌檔案。此設定控制將哪些權限套用至這些新建立的檔案。"
+    rationale: "確保日誌檔案具有正確的權限以確保敏感資料已歸檔和保護非常重要。"
+    impact: "The systems global umask could override, but only making the file permissions stricter, what is configured in RSyslog with the FileCreateMode directive. RSyslog also has it's own $umask directive that can alter the intended file creation mode. In addition, consideration should be given to how FileCreateMode is used. Thus it is critical to ensure that the intended file creation mode is not overridden with less restrictive settings in /etc/rsyslog.conf, /etc/rsyslog.d/*conf files and that FileCreateMode is set before any file is created."
+    remediation: "編輯 /etc/rsyslog.conf 或 /etc/rsyslog.d/ 中的一個專用 .conf 檔案，並將 $FileCreateMode 設定為 0640 或更嚴格: $FileCreateMode 0640 重新啟動服務: # systemctl restart rsyslog."
+    compliance:
+      - cis: ["4.2.2.4"]
+      - cis_csc_v8: ["3.3", "8.2"]
+      - cis_csc_v7: ["5.1", "6.2", "6.3"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "AU.L2-3.3.1", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)", "164.312(b)"]
+      - iso_27001-2013: ["A.12.4.1", "A.14.2.5", "A.8.1.3"]
+      - mitre_tactics: ["TA0007"]
+      - mitre_techniques: ["T1070", "T1070.002", "T1083"]
+      - nist_sp_800-53: ["AC-5", "AC-6", "AU-7"]
+      - pci_dss_v3.2.1: ["10.2", "10.3", "7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "10.2.1", "10.2.1.1", "10.2.1.2", "10.2.1.3", "10.2.1.4", "10.2.1.5", "10.2.1.6", "10.2.1.7", "10.2.2", "5.3.4", "6.4.1", "6.4.2", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: all
+    rules:
+      - 'f:/etc/rsyslog.conf -> r:^\s*\t*\$FileCreateMode 0640'
+      - 'd:/etc/rsyslog.d -> r:\.*.conf -> r:^\s*\t*\$FileCreateMode 0640'
+
+  # 5.1.8 Ensure cron is restricted to authorized users. (Automated)
+  - id: 28632
+    title: "確保 cron 僅限於授權使用者。"
+    description: "配置/etc/cron.allow以允許特定使用者使用此服務。如果 /etc/cron.allow 不存在，則檢查 /etc/cron.deny。任何未在此檔案中明確定義的使用者都可以使用 cron。透過刪除該檔案，只允許 /etc/cron.allow 中的使用者使用 cron。注意： - 其他方法（例如 systemd 計時器）也可用於排程作業。如果使用其他方法，則應刪除 cron，並應根據本機網站原則保護備用方法 - 即使 cron.allow 中未列出給定用戶，仍可以該使用者身分執行 cron 作業 - cron .allow 檔案僅控制對用於規劃和修改cron 作業的crontab 指令的管理存取。"
+    rationale: "在許多系統上，只有系統管理員有權安排 cron 作業。使用 cron.allow 檔案來控制誰可以執行 cron 作業來強制執行此原則。管理允許清單比管理拒絕清單更容易。在拒絕清單中，您可能會在系統中新增使用者 ID，但忘記將其新增至拒絕檔案。"
+    remediation: "執行以下指令來移除 /etc/cron.deny：# rm /etc/cron.deny 執行以下指令來建立 /etc/cron.allow：# touch /etc/cron.allow 執行以下指令來設定 /etc/cron.allow 的權限和所有權：# chmod g-wx,o-rwx /etc/cron.allow # chown root:root /etc/cron.allow."
+    compliance:
+      - cis: ["5.1.8"]
+      - cis_csc_v8: ["3.3"]
+      - cis_csc_v7: ["14.6"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)"]
+      - iso_27001-2013: ["A.9.1.1"]
+      - mitre_mitigations: ["M1018"]
+      - mitre_tactics: ["TA0002"]
+      - mitre_techniques: ["T1053", "T1053.003"]
+      - nist_sp_800-53: ["AC-5", "AC-6"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: all
+    rules:
+      - "not f:/etc/cron.deny"
+      - 'c:stat /etc/cron.allow -> r:Access:\s*\t*\(0640/-rw-r-----\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)'
+
+  # 5.2.4 Ensure SSH access is limited. (Automated)
+  - id: 28635
+    title: "確保 SSH 存取受到限制。"
+    description: "有多個選項可用於限制哪些使用者和群組可以透過 SSH 存取系統。建議至少利用以下選項之一： -AllowUsers： oAllowUsers 變數為系統管理員提供允許特定使用者透過 ssh 進入系統的選項。此清單由空格分隔的使用者名稱組成。此變數無法辨識數字使用者 ID。如果系統管理員希望透過僅允許允許的使用者從特定主機登入來進一步限制使用者存取，則可以以 user@host 的形式指定該條目。 -AllowGroups： oAllowGroups 變數為系統管理員提供了允許特定使用者群組透過 ssh 進入系統的選項。此清單由空格分隔的群組名稱組成。此變數無法辨識數字組 ID。 - DenyUsers： o DenyUsers 變數為系統管理員提供拒絕特定使用者 ssh 進入系統的選項。此清單由空格分隔的使用者名稱組成。此變數無法辨識數字使用者 ID。如果系統管理員想要透過明確拒絕使用者從特定主機的存取來進一步限制使用者存取，則可以以 user@host 的形式指定該條目。 - DenyGroups： o DenyGroups 變數為系統管理員提供了拒絕特定使用者群組透過 ssh 進入系統的選項。此清單由空格分隔的群組名稱組成。此變數無法辨識數字組 ID。"
+    rationale: "限制哪些使用者可以透過 SSH 遠端存取系統將有助於確保只有授權使用者才能存取系統。"
+    remediation: "編輯 /etc/ssh/sshd_config 檔案或包含的配置檔案，設置以下一個或多個參數：AllowUsers <userlist> OR AllowGroups <grouplist> OR DenyUsers <userlist> OR DenyGroups <grouplist>。"
+    compliance:
+      - cis: ["5.2.4"]
+      - cis_csc_v8: ["3.3"]
+      - cis_csc_v7: ["4.3"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)"]
+      - iso_27001-2013: ["A.9.2.3"]
+      - mitre_mitigations: ["M1018"]
+      - mitre_tactics: ["TA0008"]
+      - mitre_techniques: ["T1021", "T1021.004"]
+      - nist_sp_800-53: ["AC-5", "AC-6"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: any
+    rules:
+      - 'c:sshd -T -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+      - 'f:/etc/ssh/sshd_config -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+      - 'd:/etc/ssh/sshd_config.d -> r:\.* -> r:^\s*\t*Allowusers\s*\t*\w+|^\s*\t*Denyusers\s*\t*\w+|^\s*\t*Allowgroups\s*\t*\w+|^\s*\t*Denygroups\s*\t*\w+'
+
+  # 5.3.4 Ensure users must provide password for privilege escalation. (Automated)
+  - id: 28657
+    title: "確保使用者必須提供密碼才能進行權限升級。"
+    description: "必須配置作業系統，以便使用者必須提供密碼才能進行權限升級。"
+    rationale: "如果沒有（重新）身份驗證，使用者可以存取資源或執行他們無權的任務。當作業系統提供升級功能的能力時，使用者（重新）身份驗證至關重要。"
+    impact: "This will prevent automated processes from being able to elevate privileges."
+    remediation: "根據稽核程序的結果，使用 visudo -f <PATH TO FILE> 來編輯相關的 sudoers 檔案。移除檔案中出現任何 NOPASSWD 標籤的行。"
+    compliance:
+      - cis: ["5.3.4"]
+      - cis_csc_v8: ["5.4"]
+      - cis_csc_v7: ["4.3"]
+      - cmmc_v2.0: ["AC.L2-3.1.5", "AC.L2-3.1.6", "AC.L2-3.1.7", "SC.L2-3.13.3"]
+      - iso_27001-2013: ["A.9.2.3"]
+      - nist_sp_800-53: ["AC-6(2)", "AC-6(5)"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - soc_2: ["CC6.1", "CC6.3"]
+    condition: none
+    rules:
+      - 'f:/etc/sudoers -> r:^\s*\t*NOPASSWD'
+      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*NOPASSWD'
+
+  # 1.6.1.2 Ensure AppArmor is enabled in the bootloader configuration. (Automated)
+  - id: 28534
+    title: "確保在引導程式配置中啟用 AppArmor。"
+    description: "將 AppArmor 配置為在啟動時啟用，並驗證它是否未被引導程式引導參數覆蓋。注意：此建議是圍繞 grub 引導程式設計的，如果您的環境中使用 LILO 或其他引導程序，請執行等效設定。"
+    rationale: "AppArmor 必須在啟動時在引導程式設定中啟用，以確保它提供的控制項不會被覆寫。"
+    remediation: '編輯 /etc/default/grub 並在 GRUB_CMDLINE_LINUX= 行中添加 apparmor=1 和 security=apparmor 參數 GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor" 執行以下指令來更新 grub2 配置: # update-grub.'
+    compliance:
+      - cis: ["1.6.1.2"]
+      - cis_csc_v8: ["3.3"]
+      - cis_csc_v7: ["14.6"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)"]
+      - iso_27001-2013: ["A.9.1.1"]
+      - mitre_mitigations: ["M1026"]
+      - mitre_tactics: ["TA0003"]
+      - mitre_techniques: ["T1068", "T1565", "T1565.001", "T1565.003"]
+      - nist_sp_800-53: ["AC-5", "AC-6"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: all
+    rules:
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && r:apparmor=1'
+      - 'f:/boot/grub/grub.cfg -> r:^\s*linux && r:security=apparmor'
+      - 'not f:/boot/grub/grub.cfg -> r:^\s*linux && !r:apparmor=1'
+      - 'not f:/boot/grub/grub.cfg -> r:^\s*linux && !r:security=apparmor'
+
+  # 1.6.1.4 Ensure all AppArmor Profiles are enforcing. (Automated)
+  - id: 28536
+    title: "確保所有 AppArmor 設定檔均有效。"
+    description: "AppArmor 設定檔定義應用程式能夠存取哪些資源。"
+    rationale: "安全配置要求因網站而異。有些網站可能會強制執行比預設策略更嚴格的策略，這是完全可以接受的。此項旨在確保系統上存在的任何策略都已啟動。"
+    remediation: "運行以下指令將所有設定檔設置為強制模式： # aa-enforce /etc/apparmor.d/* 注意：任何未受限的程序可能需要為它們創建或啟用設定檔，然後重新啟動。"
+    compliance:
+      - cis: ["1.6.1.4"]
+      - cis_csc_v8: ["3.3"]
+      - cis_csc_v7: ["14.6"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)"]
+      - iso_27001-2013: ["A.9.1.1"]
+      - mitre_tactics: ["TA0005"]
+      - mitre_techniques: ["T1068", "T1565", "T1565.001", "T1565.003"]
+      - nist_sp_800-53: ["AC-5", "AC-6"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: all
+    rules:
+      - 'c:apparmor_status -> n:^(\d+)\s+profiles\s+are\s+loaded compare > 0'
+      - 'c:apparmor_status -> n:^(\d+)\s+profiles\s+are\s+in\s+enforce\s+mode compare > 0'
+      - 'c:apparmor_status -> r:^0\s+profiles\s+are\s+in\s+kill\s+mode'
+      - 'c:apparmor_status -> r:^0\s+profiles\s+are\s+in\s+unconfined\s+mode'
+      - 'c:apparmor_status -> r:^0\s*profiles\s+are\s+in\s+complain\s+mode'
+      - 'c:apparmor_status -> r:^0\s*processes\s+are\s+unconfined'
+
+  # 4.1.4.3 Ensure only authorized groups are assigned ownership of audit log files. (Automated)
+  - id: 28606
+    title: "確保只有授權群組才被指派審核日誌檔案的所有權。"
+    description: "審核日誌檔案包含有關系統和系統活動的資訊。"
+    rationale: "存取審計記錄可能會向攻擊者洩露系統和配置資料，從而可能損害其機密性。"
+    remediation: "執行以下指令以將審計日誌檔案配置為由adm群組擁有: # find $(dirname $(awk -F\"=\" '/^\\s*log_file\\s*=\\s*/ {print $2}' /etc/audit/auditd.conf | xargs)) -type f \\( ! -group adm -a ! -group root \\) -exec chgrp adm {} + 執行以下指令以將審計日誌檔案配置為由adm群組擁有: # chgrp adm /var/log/audit/ 執行以下指令以將審計配置檔案中的log_group參數設置為log_group = adm: # sed -ri 's/^\\s*#?\\s*log_group\\s*=\\s*\\S+(\\s*#.*)?.*$/log_group = adm\\1/' /etc/audit/auditd.conf 執行以下指令以重啟審計守護程序以重新載入配置檔案: # systemctl restart auditd."
+    compliance:
+      - cis: ["4.1.4.3"]
+      - cis_csc_v8: ["3.3"]
+      - cis_csc_v7: ["14.6"]
+      - cmmc_v2.0: ["AC.L1-3.1.1", "AC.L1-3.1.2", "AC.L2-3.1.3", "AC.L2-3.1.5", "MP.L2-3.8.2"]
+      - hipaa: ["164.308(a)(3)(i)", "164.308(a)(3)(ii)(A)", "164.312(a)(1)"]
+      - iso_27001-2013: ["A.9.1.1"]
+      - mitre_tactics: ["TA0007"]
+      - mitre_techniques: ["T1070", "T1070.002", "T1083"]
+      - nist_sp_800-53: ["AC-5", "AC-6"]
+      - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
+      - pci_dss_v4.0: ["1.3.1", "7.1"]
+      - soc_2: ["CC5.2", "CC6.1"]
+    condition: none
+    rules:
+      - 'f:/etc/audit/auditd.conf -> r:log_group\s*\t*= && !r:adm|root'
+
+  # 1.5.3 Ensure Automatic Error Reporting is not enabled. (Automated)
+  - id: 28531
+    title: "確保未啟用自動錯誤報告。"
+    description: "Appport 錯誤報告服務會自動產生當機報告以供偵錯。"
+    rationale: "Apport 收集潛在的敏感資料，例如核心轉儲、堆疊追蹤和日誌檔案。它們可以包含密碼、信用卡號、序號和其他私人資料。"
+    remediation: "編輯 /etc/default/apport, 並添加或修改 enabled 參數為 0: enabled=0 运行以下指令以停止並禁用 apport 服務 # systemctl stop apport.service # systemctl --now disable apport.service -- 或者 -- 运行以下指令以移除 apport 套件: # apt purge apport."
+    compliance:
+      - cis: ["1.5.3"]
+      - cis_csc_v8: ["4.8"]
+      - cis_csc_v7: ["9.2"]
+      - cmmc_v2.0: ["CM.L2-3.4.7", "CM.L2-3.4.8", "SC.L2-3.13.6"]
+      - iso_27001-2013: ["A.13.1.3"]
+      - pci_dss_v3.2.1: ["1.1.6", "1.2.1", "2.2.2", "2.2.5"]
+      - pci_dss_v4.0: ["1.2.5", "2.2.4", "6.4.1"]
+      - soc_2: ["CC6.3", "CC6.6"]
+    condition: all
+    rules:
+      - "c:systemctl is-enabled apport.service -> r:disabled"
+      - "not f:/etc/default/apport -> n:enabled=(\\d+) compare != 0"
+      - "not c:systemctl is-active apport.service -> r:active"
+
+  # 4.1.1.3 Ensure auditing for processes that start prior to auditd is enabled. (Automated)
+  - id: 28592
+    title: "確保啟用對在auditd之前啟動的程序進行審核。"
+    description: "配置 grub2，以便能夠審核能夠被審核的程序，即使它們在auditd 啟動之前啟動也是如此。"
+    rationale: "需要在auditd之前啟動的程序上捕獲審核事件，以便潛在的惡意活動不會被偵測不到。"
+    remediation: '編輯 /etc/default/grub 並將 audit=1 添加到 GRUB_CMDLINE_LINUX：例子：GRUB_CMDLINE_LINUX="audit=1". 執行以下指令以更新 grub2 配置：# update-grub.'
+    compliance:
+      - cis: ["4.1.1.3"]
+      - cis_csc_v8: ["8.2"]
+      - cis_csc_v7: ["6.2"]
+      - cmmc_v2.0: ["AU.L2-3.3.1"]
+      - hipaa: ["164.312(b)"]
+      - iso_27001-2013: ["A.12.4.1"]
+      - mitre_tactics: ["TA0005"]
+      - mitre_techniques: ["T1562", "T1562.001"]
+      - nist_sp_800-53: ["AU-7"]
+      - pci_dss_v3.2.1: ["10.2", "10.3"]
+      - pci_dss_v4.0: ["10.2.1", "10.2.1.1", "10.2.1.2", "10.2.1.3", "10.2.1.4", "10.2.1.5", "10.2.1.6", "10.2.1.7", "10.2.2", "5.3.4", "6.4.1", "6.4.2"]
+    condition: all
+    rules:
+      - 'not d:/boot -> r:\.*grub.cfg -> r:^\s*\t*linux && !r:audit=1'
+
+  # 5.4.2 Ensure lockout for failed password attempts is configured. (Automated)
+  - id: 28662
+    title: "確保配置了針對失敗的密碼嘗試的鎖定。"
+    description: "連續 n 次登入嘗試失敗後鎖定使用者。第一組變更是對通用 PAM 設定檔進行的。第二組變更應用於程式特定的 PAM 設定檔。第二組變更必須套用於將鎖定使用者的每個程式。檢查每個輔助程式的檔案，以了解如何配置它們以與 PAM 一起使用的說明。 faillock 的所有設定都位於 /etc/security/faillock.conf 中並且有很好的註解。 - 拒絕 - 如果該使用者在最近的時間間隔內連續認證失敗的次數超過 n 次，則拒絕存取。 -fail_interval - 間隔長度（以秒為單位），在此期間必須發生連續驗證失敗才能鎖定使用者帳戶。值 0 與值 never 具有相同的含義 - 如果不透過faillock 指令重設faillock 條目，則不會重新啟用存取。根據當地站點政策設定鎖定次數和解鎖時間。"
+    rationale: "在連續 n 次不成功的登入嘗試後鎖定使用者 ID 可減輕針對系統的暴力密碼攻擊。"
+    impact: "It is critical to test and validate any PAM changes before deploying. Any misconfiguration could cause the system to be inaccessible."
+    remediation: '注意：請特別注意配置。配置錯誤可能會導致系統鎖定。這是範例配置。您的配置可能會根據檔案的先前變更而有所不同。Common auth 編輯 /etc/pam.d/common-auth 並確保配置了 faillock。注意：理解每一行及相關參數對於成功實現非常重要。這些條目的順序非常具體。pam_faillock.so 行圍繞 pam_unix.so 行。註解“Added to enable faillock” 顯示以強調檔案中的附加行及其順序。# here are the per-package modules (the "Primary" block) auth required pam_faillock.so preauth # Added to enable faillock auth [success=1 default=ignore] pam_unix.so nullok auth [default=die] pam_faillock.so authfail # Added to enable faillock auth sufficient pam_faillock.so authsucc # Added to enable faillock # here''s the fallback if no module succeeds auth requisite pam_deny.so # prime the stack with a positive return value if there isn''t one already; # this avoids us returning an error just because nothing sets a success code # since the modules above will each just jump around auth required pam_permit.so # and here are more per-package modules (the "Additional" block) auth optional pam_cap.so # end of pam-auth-update config Common account 編輯 /etc/pam.d/common-account 並確保以下選段位於檔案末尾。account required pam_faillock.so Fail lock configuration 編輯 /etc/security/faillock.conf 並根據您的站點政策進行配置。範例：deny = 4 fail_interval = 900 unlock_time = 600。'
+    compliance:
+      - cis: ["5.4.2"]
+      - cis_csc_v8: ["6.2"]
+      - cis_csc_v7: ["16.7"]
+      - cmmc_v2.0: ["AC.L1-3.1.1"]
+      - hipaa: ["164.308(a)(3)(ii)(C)"]
+      - iso_27001-2013: ["A.9.2.6"]
+      - mitre_mitigations: ["M1027"]
+      - mitre_tactics: ["TA0006"]
+      - mitre_techniques: ["T1110", "T1110.001", "T1110.003"]
+      - nist_sp_800-53: ["AC-2(1)"]
+      - pci_dss_v3.2.1: ["8.1.3"]
+      - pci_dss_v4.0: ["8.2.4", "8.2.5"]
+      - soc_2: ["CC6.2", "CC6.3"]
+    condition: all
+    rules:
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*required\s*\t*pam_faillock.so\s*\t*preauth'
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*[default=die]\s*\t*pam_faillock.so\s*\t*authfail'
+      - 'f:/etc/pam.d/common-auth -> r:^\s*\t*auth\s*\t*sufficient\s*\t*pam_faillock.so\s*\t*authsucc'
+      - 'f:/etc/pam.d/common-account -> r:^\s*\t*account\s*\t*required\s*\t*pam_faillock.so'
+      - 'f:/etc/security/faillock.conf -> n:^\s*\t*deny\s*\t*=\s*\t*(\d+) compare <= 4'
+      - 'f:/etc/security/faillock.conf -> n:^\s*\t*fail_interval\s*\t*=\s*\t*(\d+) compare <= 900'
+      - 'not f:/etc/security/faillock.conf -> n:^\s*\t*unlock_time\s*\t*=\s*\t*(\d+) compare < 600 && n:^\s*\t*unlock_time\s*\t*=\s*\t*(\d+) compare > 0'
