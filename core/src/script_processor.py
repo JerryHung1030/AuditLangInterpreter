@@ -61,7 +61,7 @@ class ScriptProcessor:
             script_data = self.validator.validate_file(file_content)
             
             # Step 2: Build the semantic tree for each check in the script :)
-            results = []
+            checks = []
             for check in script_data['checks']:
                 tree = self.tree_builder.build_tree({
                     'id': check['id'],
@@ -78,10 +78,11 @@ class ScriptProcessor:
                         "error_message": ScriptProcessorError.TREE_BUILDING_FAILED.value[1],
                         "details": errors
                     }
-                results.append(self.tree_builder.tree_to_json(tree))
+                checks.append(json.loads(self.tree_builder.tree_to_json(tree)))
             
             # Step 4: Return the JSON string of the tree if all checks passed :)
-            return json.dumps(results, separators=(',', ':'))
+            result = {"checks": checks}
+            return json.dumps(result, separators=(',', ':'))
         
         except ValidationError as sve:
             return {
