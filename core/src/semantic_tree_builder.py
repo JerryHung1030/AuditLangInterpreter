@@ -11,8 +11,8 @@
     Author:       Jerry Hung, Bolt Lin
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-07-10
-    Last Updated: 2024-08-08
-    Version:      1.0.0
+    Last Updated: 2024-09-10
+    Version:      1.0.1
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -411,6 +411,8 @@ class SemanticTreeBuilder:
             else:
                 if part.startswith('r:'):
                     content_operator, value = 'r', part[2:].strip()
+
+                    value = self._preprocess_regex(value)
                     if not self._is_valid_regex(value):
                         self.add_error(SemanticTreeError.INVALID_CONTENT_OPERATOR, f"Invalid regex in rule: {part}", id, index)
                         print(f"Error: Invalid regex in rule: {value}")
@@ -448,6 +450,10 @@ class SemanticTreeBuilder:
         except re.error:
             return False
 
+    def _preprocess_regex(self, regex: str) -> str:
+        # Replace \p with an empty string using raw string notation
+        return regex.replace(r'\p', '')
+
     def _parse_numeric_rule(self, part: str, id: int, index: int) -> Optional[Tuple[str, str, str, str]]:
         # Use regex to split the parts correctly considering multiple spaces ()
         match = re.match(r'^(.*?)\s+compare\s+([<>]=?|==|!=)\s*(\d+)$', part.strip())
@@ -457,11 +463,13 @@ class SemanticTreeBuilder:
 
         regex, operator, number = match.groups()
 
-        if not self._is_valid_regex(regex):
-            self.add_error(SemanticTreeError.INVALID_COMPARE_EXPRESSION, f"Invalid regex in numeric rule: {regex}", id, index)
+        processed_regex = self._preprocess_regex(regex)
+        
+        if not self._is_valid_regex(processed_regex):
+            self.add_error(SemanticTreeError.INVALID_COMPARE_EXPRESSION, f"Invalid regex in numeric rule: {processed_regex}", id, index)
             return None
 
-        return 'n', regex, operator, number
+        return 'n', processed_regex, operator, number
 
     def build_tree(self, obj: Dict) -> Union[ConditionNode, None]:
         try:
