@@ -11,7 +11,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
     Last Updated: 2024-09-10
-    Version:      0.1.5
+    Version:      0.1.6
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -442,7 +442,7 @@ class ContentRuleChecker:
                     else:
                         results.append(result.success)
 
-                final_result = all(results)
+                final_result = any(results)
                 return ContentCheckResult(success=final_result)
 
             else:
