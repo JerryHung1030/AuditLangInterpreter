@@ -256,6 +256,12 @@ class ExecutionNodeExecutor:
             logger.exception(f"Command execution failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.COMMAND_FAILED.value[1]}: {str(e)}")
 
+    def execute_command_with_sudo(self, command: str, ssh_manager: SSHManager, use_sudo: bool = False) -> Tuple[str, str, int]:
+        if use_sudo:
+            command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
+        output, error, exit_status = ssh_manager.execute_command(command)
+        return output.strip(), error.strip(), exit_status
+    
     def determine_actual_os_type(self, ssh_manager: SSHManager) -> str:
         try:
             output, error, exit_status = ssh_manager.execute_command('uname')
