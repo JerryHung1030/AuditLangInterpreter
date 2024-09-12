@@ -13,7 +13,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-08
     Last Updated: 2024-09-02
-    Version:      1.0.1
+    Version:      1.0.2
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -39,6 +39,7 @@
 import json
 from typing import Union, Dict, List
 from enum import Enum
+from loguru import logger  # 添加 loguru
 
 from script_validator import ScriptValidator, ValidationError
 from semantic_tree_builder import SemanticTreeBuilder, SemanticTreeError
@@ -57,12 +58,14 @@ class ScriptProcessor:
 
     def process(self, file_content: str) -> Union[str, Dict[str, Union[str, List[Dict[str, Union[str, int]]]]]]:
         try:
+            logger.info("Validating YAML file content.")
             # Step 1: Validate the YAML file :)
             script_data = self.validator.validate_file(file_content)
             
             # Step 2: Build the semantic tree for each check in the script :)
             checks = []
             for check in script_data['checks']:
+                logger.debug(f"Building tree for check ID: {check['id']}")
                 tree = self.tree_builder.build_tree({
                     'id': check['id'],
                     'condition': check['condition'],
@@ -72,6 +75,7 @@ class ScriptProcessor:
                 # Step 3: Check for errors during tree building :)
                 if tree is None:
                     errors = self.tree_builder.get_errors()
+                    logger.error("Tree building failed. Errors: {}", errors)
                     return {
                         "status": "error",
                         "error_code": ScriptProcessorError.TREE_BUILDING_FAILED.value[0],
@@ -82,9 +86,11 @@ class ScriptProcessor:
             
             # Step 4: Return the JSON string of the tree if all checks passed :)
             result = {"checks": checks}
+            logger.info("Semantic tree built successfully.")
             return json.dumps(result, separators=(',', ':'))
         
         except ValidationError as sve:
+            logger.error("Validation failed. Errors: {}", sve.errors)
             return {
                 "status": "error",
                 "error_code": ScriptProcessorError.FILE_VALIDATION_FAILED.value[0],
@@ -93,6 +99,7 @@ class ScriptProcessor:
             }
         
         except Exception as e:
+            logger.error("An unexpected error occurred: {}", str(e))
             return {
                 "status": "error",
                 "error_code": ScriptProcessorError.UNKNOWN_ERROR.value[0],
@@ -102,6 +109,7 @@ class ScriptProcessor:
 
     def executor(self, tree_json: str, ssh_details: Dict[str, Union[str, int]]) -> Dict[str, Union[str, Dict]]:
         try:
+            logger.info("Executing semantic tree.")
             # Step 1: Convert JSON string to a Python dictionary for execution :)
             semantic_tree = json.loads(tree_json)
 
@@ -118,6 +126,7 @@ class ScriptProcessor:
 
             # Step 4: Check for success or handle errors in execution :)
             if not execution_result.success:
+                logger.error("Execution failed. Results: {}", execution_result.results)
                 return {
                     "status": "error",
                     "error_code": ScriptProcessorError.EXECUTION_FAILED.value[0],
@@ -126,12 +135,14 @@ class ScriptProcessor:
                 }
 
             # Step 5: Return the successful execution results :)
+            logger.info("Execution completed successfully.")
             return {
                 "status": "success",
                 "results": execution_result.results
             }
 
         except SemanticTreeError as ste:
+            logger.error("Semantic tree building error: {}", str(ste))
             return {
                 "status": "error",
                 "error_code": ScriptProcessorError.TREE_BUILDING_FAILED.value[0],
@@ -140,6 +151,7 @@ class ScriptProcessor:
             }
 
         except Exception as e:
+            logger.error("An unexpected error occurred: {}", str(e))
             return {
                 "status": "error",
                 "error_code": ScriptProcessorError.UNKNOWN_ERROR.value[0],

@@ -11,7 +11,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
     Last Updated: 2024-09-10
-    Version:      0.1.6
+    Version:      0.1.7
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -38,6 +38,7 @@
 ===============================================================================
 """
 
+from loguru import logger
 import paramiko
 import re
 from typing import Dict, Optional, Union, Tuple, List, Any
@@ -73,43 +74,56 @@ class SSHManager:
         self.client = None
 
     def connect(self) -> None:
+        """
+        Establishes an SSH connection to the specified host.
+        Logs connection details and any errors encountered.
+        """
         try:
             self.client = paramiko.SSHClient()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.client.connect(self.hostname, port=self.port, username=self.username, password=self.password)
-            print(f"Connected to {self.hostname} on port {self.port}")
+            logger.info(f"Connected to {self.hostname} on port {self.port}")
         except paramiko.AuthenticationException:
+            logger.error(f"Authentication failed when connecting to {self.hostname}")
             raise Exception(f"Authentication failed when connecting to {self.hostname}")
         except paramiko.SSHException as e:
+            logger.error(f"Could not establish SSH connection: {str(e)}")
             raise Exception(f"Could not establish SSH connection: {str(e)}")
         except Exception as e:
+            logger.error(f"Connection failed: {str(e)}")
             raise Exception(f"Connection failed: {str(e)}")
 
-    def execute_command(self, command: str, ) -> Tuple[str, str, int]:
+    def execute_command(self, command: str) -> Tuple[str, str, int]:
+        """
+        Executes the specified command over the SSH connection.
+        Logs the command being executed and any output, errors, or exit statuses encountered.
+        """
         if not self.client:
             raise Exception("SSH connection not established")
 
         try:
-            # print(f"Executing command: {command}")
+            logger.debug(f"Executing command: {command}")
             stdin, stdout, stderr = self.client.exec_command(command)
             output = stdout.read().decode('utf-8')
             error = stderr.read().decode('utf-8')
             exit_status = stdout.channel.recv_exit_status()
-            # print(f"Command output: {output}")
-            # print(f"Command error: {error}")
-            # print(f"Exit status: {exit_status}")
+            logger.debug(f"Command output: {output}")
+            logger.debug(f"Command error: {error}")
+            logger.debug(f"Exit status: {exit_status}")
             return output, error, exit_status
         except paramiko.SSHException as e:
+            logger.error(f"Failed to execute command: {str(e)}")
             raise Exception(f"Failed to execute command: {str(e)}")
 
     def close(self) -> None:
         """
-        Close the SSH connection.
+        Closes the SSH connection.
+        Logs disconnection details.
         """
         if self.client:
             self.client.close()
             self.client = None
-            print(f"Disconnected from {self.hostname}")
+            logger.info(f"Disconnected from {self.hostname}")
 
 class OSCommandBuilder:
     def __init__(self, os_type: str):
@@ -201,6 +215,7 @@ class ExecutionNodeExecutor:
 
     def execute(self, ssh_manager: SSHManager) -> ExecutionResult:
         try:
+            logger.debug(f"Executing node with type: {self.node_type}, main target: {self.main_target}")
             actual_os_type = self.determine_actual_os_type(ssh_manager)
             if self.os_type != actual_os_type:
                 return ExecutionResult(success=False, error=ExecutionError.MISMATCH_OS_TYPE.value[1])
@@ -218,115 +233,114 @@ class ExecutionNodeExecutor:
             elif self.node_type == 'r':
                 return self.check_registry_key(ssh_manager)
             else:
+                logger.error(f"Invalid node type: {self.node_type}")
                 return ExecutionResult(success=False, error=ExecutionError.INVALID_NODE_TYPE.value[1])
 
         except Exception as e:
+            logger.exception(f"Command execution failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.COMMAND_FAILED.value[1]}: {str(e)}")
 
     def determine_actual_os_type(self, ssh_manager: SSHManager) -> str:
         try:
             output, error, exit_status = ssh_manager.execute_command('uname')
+            logger.debug(f"OS type detected: {output.strip()}")
             if exit_status != 0:
                 raise Exception("Failed to detect OS type")
             if 'Linux' in output:
                 return 'linux'.strip()
             return 'windows'.strip()
         except Exception as e:
+            logger.error(f"OS detection failed: {str(e)}")
             raise Exception(f"{ExecutionError.OS_DETECTION_FAILED.value[1]}: {str(e)}")
 
     def check_directory_existence(self, ssh_manager: SSHManager) -> ExecutionResult:
         if self.sub_target or self.target_pattern:
+            logger.error("Invalid configuration: sub_target or target_pattern provided for directory check")
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
             command = self.command_builder.build_directory_exsistence_command(self.main_target)
             command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
+            logger.debug(f"Executing directory existence check with command: {command}")
             output, error, exit_status = ssh_manager.execute_command(command)
             if output:
                 return ExecutionResult(success=True, output=self.main_target)
             return ExecutionResult(success=False, output=self.main_target)
         except Exception as e:
+            logger.exception(f"Directory existence check failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
     def check_file_existence(self, ssh_manager: SSHManager) -> ExecutionResult:
         if self.sub_target or self.target_pattern:
+            logger.error("Invalid configuration: sub_target or target_pattern provided for file check")
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
             command = self.command_builder.build_file_existence_command(self.main_target)
             command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
+            logger.debug(f"Executing file existence check with command: {command}")
             output, error, exit_status = ssh_manager.execute_command(command)
-            
-            # Clean and strip the output to avoid any unexpected trailing characters
             output = output.strip() if output else ""
 
-            # Check for "not exists" first to handle cases correctly
             if "not exists" in output:
                 return ExecutionResult(success=False, output=self.main_target)
             elif "exists" in output:
                 return ExecutionResult(success=True, output=self.main_target)
             else:
+                logger.error("Unexpected output from file existence check.")
                 return ExecutionResult(success=False, error="Unexpected output from file existence check.")
 
         except Exception as e:
+            logger.exception(f"File existence check failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
     def list_files_with_pattern(self, ssh_manager: SSHManager) -> ExecutionResult:
-        # Ensure target_pattern exists and sub_target is None
         if not self.target_pattern or self.sub_target:
+            logger.error("Invalid configuration: target_pattern is required and sub_target should be None")
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
-            # Build the command to list all files in the directory
             command = self.command_builder.build_directory_listing_command(self.main_target)
             command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
+            logger.debug(f"Executing file listing with command: {command}")
             output, error, exit_status = ssh_manager.execute_command(command)
-            
             if output:
-                # Use _filter_files_with_pattern to filter files that match the target pattern
                 filtered_files = self._filter_files_with_pattern(output, self.target_pattern)
-                
-                # If there are any filtered files, return their full absolute paths
                 if filtered_files:
+                    logger.debug(f"Files matching pattern: {filtered_files}")
                     return ExecutionResult(success=True, output=json.dumps(filtered_files))
-                
                 return ExecutionResult(success=False, error="No files matched the pattern")
-            
             return ExecutionResult(success=False, error="No output from command")
-        
+
         except Exception as e:
+            logger.exception(f"Listing files with pattern failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
+
     def _filter_files_with_pattern(self, file_list: str, pattern: str) -> list:
-        # Filter the file list using the provided regex pattern
         try:
             regex = re.compile(pattern)
-            # Process the file list by splitting it into lines using "\n"
-            # Return the list of file paths that match the regex pattern
             return [file.strip() for file in file_list.split("\n") if file.strip() and regex.search(file.strip())]
         except re.error as e:
+            logger.error(f"Invalid regex pattern: {str(e)}")
             raise ValueError(f"Invalid regex pattern: {str(e)}")
 
     def run_command(self, ssh_manager: SSHManager) -> ExecutionResult:
         if self.sub_target or self.target_pattern:
+            logger.error("Invalid configuration: sub_target or target_pattern provided for command execution")  # Error log
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
-            if self.os_type == "linux":  # for test use, need to be revised
+            if self.os_type == "linux":
                 command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {self.main_target}"
-            
+            logger.debug(f"Running command: {command}")  # Debug log for command execution
             output, error, exit_status = ssh_manager.execute_command(command)
-            
-            # Clean and strip the output and error
             output = output.strip() if output else ""
             error = error.strip() if error else ""
 
-            # Exclude errors starting with '[sudo] password for'
-            if error.startswith("[sudo] password for"):
-                error = ""
+            error = re.sub(r"\[sudo\] password for .+: ?", "", error)
 
             if output and error:
-                # Include error in output if not empty # TODO: 待確認是否正確
                 combined_output = f"{output}\n{error}"
                 return ExecutionResult(success=True, output=combined_output)
             elif output:
@@ -334,23 +348,27 @@ class ExecutionNodeExecutor:
             elif error:
                 return ExecutionResult(success=True, output=error)
             else:
+                logger.error("Command failed with no result")
                 return ExecutionResult(success=False, error="Command failed with no result")
 
         except Exception as e:
+            logger.exception(f"Command execution failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
-
 
     def check_process_existence(self, ssh_manager: SSHManager) -> ExecutionResult:
         if self.sub_target or self.target_pattern:
+            logger.error("Invalid configuration: sub_target or target_pattern provided for process check")
             return ExecutionResult(success=False, error=ExecutionError.INVALID_CONFIGURATION.value[1])
 
         try:
             command = self.command_builder.build_process_check_command(self.main_target)
+            logger.debug(f"Checking process existence with command: {command}")
             output, error, exit_status = ssh_manager.execute_command(command)
             if output:
                 return ExecutionResult(success=True, output=self.main_target)
             return ExecutionResult(success=False, output=self.main_target)
         except Exception as e:
+            logger.exception(f"Process existence check failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
     def check_registry_key(self, ssh_manager: SSHManager) -> ExecutionResult:
@@ -360,13 +378,15 @@ class ExecutionNodeExecutor:
             else:
                 command = self.command_builder.build_registry_check_command(self.main_target, self.sub_target)
 
+            logger.debug(f"Checking registry key with command: {command}")
             output, error, exit_status = ssh_manager.execute_command(command)
             if output:
                 return ExecutionResult(success=True, output=output.strip())
             return ExecutionResult(success=False, output=output.strip())
         except Exception as e:
+            logger.exception(f"Registry key check failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
-
+        
 class ContentCheckResult:
     def __init__(self, success: bool, error: Optional[str] = None, details: Optional[str] = None):
         self.success = success
@@ -409,18 +429,19 @@ class ContentRuleChecker:
             elif self.node_type in ['d', 'p']:
                 return ContentCheckResult(success=True)
             else:
+                logger.error("Invalid node type: {}", self.node_type)
                 return ContentCheckResult(success=False, error=ExecutionError.INVALID_NODE_TYPE.value[1])
         except Exception as e:
+            logger.exception("Error in content check: {}", str(e))
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def check_command_output(self, content: str) -> ContentCheckResult:
         try:
-            print(f"[DEBUG] Checking command output")
-            print(f"[DEBUG] Content to check:\n{content}")
-
+            logger.debug("Checking command output")
+            logger.debug("Content to check:\n{}", content)
             return self._check_lines(content.splitlines())
-
         except Exception as e:
+            logger.exception("Error checking command output: {}", str(e))
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def check_file_content(self, content: Union[str, List[str]]) -> ContentCheckResult:
@@ -430,14 +451,15 @@ class ContentRuleChecker:
 
             if isinstance(content, list):
                 if not content:
+                    logger.error("No files matched the pattern")
                     return ContentCheckResult(success=False, error="No files matched the pattern.")
 
                 results = []
                 for file_path in content:
-                    print(f"[DEBUG] Reading and checking file: {file_path}")
+                    logger.debug("Reading and checking file: {}", file_path)
                     result = self.read_and_check_file(file_path)
                     if not result.success:
-                        print(f"[DEBUG] Failed with file: {file_path}. Error: {result.error}")
+                        logger.debug("Failed with file: {}. Error: {}", file_path, result.error)
                         results.append(False)
                     else:
                         results.append(result.success)
@@ -446,14 +468,16 @@ class ContentRuleChecker:
                 return ContentCheckResult(success=final_result)
 
             else:
+                logger.error("Invalid file rule")
                 return ContentCheckResult(success=False, error=ExecutionError.INVALID_FILE_RULE.value[1])
 
         except Exception as e:
+            logger.exception("Error checking file content: {}", str(e))
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def read_and_check_file(self, file_path: str) -> ContentCheckResult:
         try:
-            print(f"[DEBUG] Reading and checking file: {file_path}")
+            logger.debug("Reading and checking file: {}", file_path)
             command = self.command_builder.build_read_file_command(file_path)
 
             if self.os_type == "linux":
@@ -461,75 +485,83 @@ class ContentRuleChecker:
             output, error, exit_status = self.ssh_manager.execute_command(command)
 
             if exit_status != 0:
-                print(f"[DEBUG] Failed to read file. Error: {error}")
+                logger.error("Failed to read file: {}. Error: {}", file_path, error)
                 return ContentCheckResult(success=False, error=f"Failed to read file {file_path}: {error}")
 
-            print(f"[DEBUG] File content:\n{output}")
-
+            logger.debug("File content:\n{}", output)
             return self._check_lines(output.splitlines())
 
         except Exception as e:
+            logger.exception("Error reading and checking file: {}", str(e))
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
-        
+
     def _check_lines(self, lines: List[str]) -> ContentCheckResult:
-        # Iterate through each line in the content
+        # Iterate through each line in the list of lines
         for line in lines:
-            # Check if the line matches all content rules
-            match = all(self._check_line_against_rule(line, rule) for rule in self.content_rules)
+            match = True
 
-            # Apply ContentRuleChecker's rule_negation at the content level
-            if self.rule_negation:
-                match = not match
-                print(f"[DEBUG] ContentRuleChecker-level negation applied to line: {line}, Match result after negation: {match}")
+            # Check each rule against the line
+            for rule in self.content_rules:
+                if not self._does_line_match_rule(line, rule):
+                    match = False
+                    break
 
-            # If any line matches (considering the negation), return success
+            # If the line matched all rules, return success (after applying negation if necessary)
             if match:
-                print(f"[DEBUG] Line matched all rules (after applying negation if necessary): {line}")
-                return ContentCheckResult(success=True)
+                logger.debug("Line matched all rules: {}", line)
+                if self.rule_negation:
+                    match = not match
+                    logger.debug("ContentRuleChecker-level negation applied to line: {}, Match result after negation: {}", line, match)
 
-        # If no lines matched after checking all, return failure
-        print(f"[DEBUG] No line matched all rules (after applying negation if necessary)")
-        return ContentCheckResult(success=False)
+                logger.debug("Final result after matching all rules (including negation): {}", match)
+                return ContentCheckResult(success=match)
 
-    def _check_line_against_rule(self, line: str, rule: Dict) -> bool:
+        # If no line matched all rules, apply negation at the end if necessary
+        match = False
+        logger.debug("No line matched all rules")
+
+        # Apply rule negation to the final result if necessary
+        if self.rule_negation:
+            match = not match
+            logger.debug("Negation applied to final result: {}", match)
+
+        return ContentCheckResult(success=match)
+
+    def _does_line_match_rule(self, line: str, rule: Dict) -> bool:
         content_operator = rule.get('content_operator')
         value = rule.get('value')
         content_negation = rule.get('negation', False)
 
         if content_operator == 'r':
             match = bool(re.search(value, line))
-            print(f"[DEBUG] Cleaned line: {line}, Regex pattern: {value}, Match result: {match}")
-
+            logger.debug("Checked line: {}, Regex pattern: {}, Match result: {}", line, value, match)
         elif content_operator == 'n':
-            # Correct the call to numeric_compare by separating the parameters
             match = self.numeric_compare(line, value, rule.get('compare_operator'), rule.get('compare_value'))
-            print(f"[DEBUG] Numeric compare result: {match} for value: {value}")
-
+            logger.debug("Numeric compare result: {} for value: {}", match, value)
         elif content_operator is None:
             match = value in line
-            print(f"[DEBUG] Substring match result: {match} for value: {value}")
-
+            logger.debug("Substring match result: {} for value: {}", match, value)
         else:
-            print(f"[DEBUG] Invalid content operator: {content_operator}")
+            logger.error("Invalid content operator: {}", content_operator)
             return False
 
         if content_negation:
             match = not match
-            print(f"[DEBUG] content-level negation applied. Final match result: {match}")
+            logger.debug("Content-level negation applied. Final match result: {}", match)
 
         return match
 
     def numeric_compare(self, content: str, value: str, compare_operator: str, compare_value_str: str) -> bool:
         try:
-            print(f"[DEBUG] Performing numeric comparison on content: {content}")
+            logger.debug("Performing numeric comparison on content: {}", content)
             match = re.search(value, content)
             if not match:
-                print(f"[DEBUG] No numeric match found for value: {value}")
+                logger.debug("No numeric match found for value: {}", value)
                 return False
 
             number = int(match.group(1))
             compare_value = int(compare_value_str)
-            print(f"[DEBUG] Extracted number: {number}, Compare value: {compare_value}")
+            logger.debug("Extracted number: {}, Compare value: {}", number, compare_value)
 
             if compare_operator == '>':
                 return number > compare_value
@@ -544,9 +576,10 @@ class ContentRuleChecker:
             elif compare_operator == '!=':
                 return number != compare_value
             else:
-                print(f"[DEBUG] Invalid compare operator: {compare_operator}")
+                logger.error("Invalid compare operator: {}", compare_operator)
                 return False
         except Exception as e:
+            logger.exception("Error in numeric comparison: {}", str(e))
             raise ValueError(f"{ExecutionError.INVALID_COMPARE_EXPRESSION.value[1]}: {str(e)}")
 
     def _parse_content(self, content: str) -> List[str]:
@@ -555,10 +588,10 @@ class ContentRuleChecker:
             if isinstance(content_list, list):
                 return content_list
             else:
-                print(f"[DEBUG] Parsed content is not a list: {content_list}")
+                logger.debug("Parsed content is not a list: {}", content_list)
                 return [content]
         except json.JSONDecodeError:
-            print(f"[DEBUG] Content is a single file path, not a JSON list: {content}")
+            logger.debug("Content is a single file path, not a JSON list: {}", content)
             return [content]
 
 class SemanticTreeExecutionResult:
@@ -584,9 +617,10 @@ class SemanticTreeExecutor:
     def connect(self) -> bool:
         try:
             self.ssh_manager.connect()
+            logger.info(f"Connected to {self.ssh_manager.hostname}")
             return True
         except Exception as e:
-            print(f"Failed to connect to {self.ssh_manager.hostname}: {str(e)}")
+            logger.error(f"Failed to connect to {self.ssh_manager.hostname}: {str(e)}")
             return False
 
     def execute_tree(self, semantic_tree: Dict) -> SemanticTreeExecutionResult:
@@ -603,7 +637,10 @@ class SemanticTreeExecutor:
             check_id = check['id']
             condition = check['condition']
 
-            print(f"\n--- Executing check ID: {check_id} with condition: {condition} ---")
+            logger.info(f"Executing check ID: {check_id} with condition: {condition}")
+            logger.info("##########################################################")
+            logger.info(f"##### Executing check ID: {check_id} with condition: {condition} #####")
+            logger.info("##########################################################")
 
             rule_results = self._execute_rules(check['rules'], os_type)
             if isinstance(rule_results, SemanticTreeExecutionResult):
@@ -612,12 +649,13 @@ class SemanticTreeExecutor:
                 return rule_results
 
             # Print all rule results for this check ID
-            print(f"[DEBUG] Rule results for check ID {check_id}: {rule_results}")
+            logger.debug(f"Rule results for check ID {check_id}: {rule_results}")
 
             # Determine the final check result based on the condition
             check_pass = self._evaluate_condition(condition, rule_results)
             if check_pass is None:
                 self.ssh_manager.close()
+                logger.error(f"Invalid condition specified at check ID {check_id}")
                 return SemanticTreeExecutionResult(
                     success=False,
                     error=f"Invalid condition specified at check ID {check_id}"
@@ -630,7 +668,7 @@ class SemanticTreeExecutor:
                 'rule_results': rule_results
             }
 
-            print(f"Check ID: {check_id} result: {results[check_id]['result']}")
+            logger.info(f"Check ID: {check_id} result: {results[check_id]['result']}")  # Log check result
 
         # Close the SSH connection after all checks
         self.ssh_manager.close()
@@ -643,14 +681,14 @@ class SemanticTreeExecutor:
             exec_node = rule['execution_node']
             rule_negation = rule.get('negation', False)  # Fetch negation flag once
 
-            print(f"\nExecuting rule with execution node: {exec_node}")
+            logger.info(f"Executing rule with execution node: {exec_node}")  # Log rule execution
 
             # Execute node and check for success
             execution_result = self._execute_node(exec_node, os_type)
 
             if not execution_result.success:
                 if execution_result.error:  # If an error exists, print it
-                    print(f"Execution failed for rule {exec_node}: {execution_result.error}")
+                    logger.error(f"Execution failed for rule {exec_node}: {execution_result.error}")
                 
                 # Always append negation if execution fails, regardless of the error
                 rule_results.append(not execution_result.success if rule_negation else execution_result.success)
@@ -689,7 +727,7 @@ class SemanticTreeExecutor:
             os_type=os_type,
         )
         execution_result = executor.execute(self.ssh_manager)
-        print(f"Execution result: {execution_result.to_dict()}")
+        logger.debug(f"Execution result: {execution_result.to_dict()}")
         return execution_result
 
     def _process_file_rules(self, file_rules: List[Dict], directory_output: str, os_type: str, negation: bool) -> Union[List[bool], SemanticTreeExecutionResult]:
@@ -699,7 +737,7 @@ class SemanticTreeExecutor:
 
             execution_result = self._execute_node(exec_node, os_type)
             if not execution_result.success:
-                print(f"Execution failed for file rule {exec_node}: {execution_result.error}")
+                logger.error(f"Execution failed for file rule {exec_node}: {execution_result.error}")
                 file_rule_results.append(False)
                 continue
 
@@ -720,19 +758,20 @@ class SemanticTreeExecutor:
                 ssh_manager=self.ssh_manager,
                 command_builder=OSCommandBuilder(os_type),
                 os_type=os_type,
-                rule_negation=rule_negation  # Pass negation to the checker
+                rule_negation=rule_negation
             )
 
             content_result = checker.check(exec_output)
-            print(f"Content result: {content_result.to_dict()}")
+            logger.debug(f"Content result: {content_result.to_dict()}")
 
             if not content_result.success:
-                print(f"Content check failed for rule {rule['execution_node']}: {content_result.error}")
+                logger.error(f"Content check failed for rule {rule['execution_node']}: {content_result.error}")
                 return False
             else:
                 return True
 
         except Exception as e:
+            logger.exception(f"Error during content check: {str(e)}")
             return SemanticTreeExecutionResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def _evaluate_condition(self, condition: str, rule_results: List[bool]) -> Optional[bool]:
@@ -743,5 +782,5 @@ class SemanticTreeExecutor:
         elif condition == 'none':
             return not any(rule_results)
         else:
-            print(f"Invalid condition: {condition}")
+            logger.error(f"Invalid condition: {condition}")
             return None

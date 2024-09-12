@@ -13,7 +13,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-08
     Last Updated: 2024-08-08
-    Version:      1.0.0
+    Version:      1.0.1
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -38,6 +38,7 @@
 
 import yaml
 from enum import Enum
+from loguru import logger
 
 class ScriptValidationError(Enum):
     MISSING_TOP_LEVEL_FIELD = ("V001", "Missing required top-level field")
@@ -64,16 +65,21 @@ class ScriptValidator:
 
     def validate_file(self, file_content: str) -> dict:
         try:
+            logger.info("Starting validation for YAML file content.")
             data = yaml.safe_load(file_content)
             self.validate_structure(data)
             self.validate_checks(data.get('checks'))
             if self.errors:
+                logger.error("Validation failed with errors: {}", self.errors)
                 raise ValidationError(self.errors)
+            logger.info("Validation passed successfully.")
             return data
         except yaml.YAMLError as e:
+            logger.error("YAML format error: {}", str(e))
             raise ValidationError([{"code": "YAML_ERROR", "message": f"Invalid YAML format: {str(e)}"}])
 
     def validate_structure(self, data: dict):
+        logger.debug("Validating YAML structure.")
         required_fields = ['checks']
         for field in required_fields:
             if field not in data:
@@ -83,13 +89,16 @@ class ScriptValidator:
 
     def validate_checks(self, checks: list):
         if not isinstance(checks, list):
+            logger.error("Checks validation failed: 'checks' should be a list.")
             self.add_error(ScriptValidationError.INVALID_CHECKS_TYPE)
             return
 
+        logger.debug("Validating individual checks.")
         for check in checks:
             self.validate_script(check)
 
     def validate_script(self, script: dict):
+        logger.debug("Validating script with ID: {}", script.get('id', 'unknown'))
         required_fields = ['id', 'title', 'description', 'rationale', 'remediation', 'condition', 'rules']
         for field in required_fields:
             if field not in script:
@@ -108,6 +117,7 @@ class ScriptValidator:
             self.add_error(ScriptValidationError.INVALID_COMPLIANCE_TYPE, script_id)
             return
 
+        logger.debug("Validating compliance entries for script ID: {}", script_id)
         for item in compliance:
             if not isinstance(item, dict):
                 self.add_error(ScriptValidationError.INVALID_COMPLIANCE_ENTRY, script_id)
@@ -124,6 +134,7 @@ class ScriptValidator:
         }
         if args:
             error.update({"details": args})
+        logger.error("Validation error: {}", error)
         self.errors.append(error)
 
     def get_errors(self):

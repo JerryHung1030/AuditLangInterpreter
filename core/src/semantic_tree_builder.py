@@ -12,7 +12,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-07-10
     Last Updated: 2024-09-10
-    Version:      1.0.1
+    Version:      1.0.2
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -38,6 +38,7 @@
 ===============================================================================
 """
 
+from loguru import logger
 import json
 from typing import List, Dict, Optional, Union, Tuple
 from enum import Enum
@@ -191,6 +192,7 @@ class ConditionNode:
 class SemanticTreeBuilder:
     def __init__(self):
         self.errors = []
+        logger.debug("SemanticTreeBuilder initialized.")
 
     def add_error(self, error_code: SemanticTreeError, detail: str, id: int, rule_number: int):
         self.errors.append({
@@ -203,6 +205,7 @@ class SemanticTreeBuilder:
 
     def parse_rule(self, rule: str, id: int, index: int) -> Union[FileRule, DirectoryRule, CommandRule, ProcessRule, RegistryRule, None]:
         try:
+            logger.debug("Parsing rule: {} for id: {}, index: {}", rule, id, index)
             # Check for negation
             negation = rule.startswith('not ')
             if negation:
@@ -223,17 +226,19 @@ class SemanticTreeBuilder:
                 self.add_error(SemanticTreeError.UNKNOWN_RULE_TYPE, rule, id, index)
                 return None
         except Exception as e:
+            logger.exception("Exception encountered while parsing rule: {} for id: {}, index: {}", rule, id, index)
             self.add_error(SemanticTreeError.UNKNOWN_ERROR, str(e), id, index)
             return None
 
     def parse_file_rule(self, rule: str, negation: bool, id: int, index: int) -> Optional[FileRule]:
+        logger.debug("Parsing file rule: {} for id: {}, index: {}", rule, id, index)
         # Split on '->', accounting for rules without content checks
         parts = rule.split(' -> ')
 
         # Check the basic format
         if len(parts) == 0 or len(parts) > 2 or not parts[0].strip():
             self.add_error(SemanticTreeError.INVALID_FILE_RULE, f"Invalid rule format: {rule}", id, index)
-            print(f"Error: Invalid rule format: {rule}")
+            logger.error(f"Invalid rule format: {rule}")
             return None
         
         file_rules = []
@@ -254,7 +259,7 @@ class SemanticTreeBuilder:
                 content_rules = self.parse_content_rule(parts[1], "file", id, index)
                 if content_rules is None:
                     self.add_error(SemanticTreeError.INVALID_FILE_RULE, f"Failed to parse content rules: {parts[1]}", id, index)
-                    print(f"Error: Failed to parse content rules: {parts[1]}")
+                    logger.error(f"Failed to parse content rules: {parts[1]}")
                     return None
 
             # Create and add the FileRule with execution nodes and content rules
@@ -264,13 +269,15 @@ class SemanticTreeBuilder:
         return file_rules
 
     def parse_directory_rule(self, rule: str, negation: bool, id: int, index: int) -> Optional[List[DirectoryRule]]:
+        logger.debug("Parsing directory rule: {} for id: {}, index: {}", rule, id, index)
+
         # Split the rule into parts by '->', handling potential content checks
         parts = rule.split(' -> ')
 
         # Check the basic format
         if len(parts) == 0 or not parts[0].strip():
             self.add_error(SemanticTreeError.INVALID_DIRECTORY_RULE, f"Invalid rule format: {rule}", id, index)
-            print(f"Error: Invalid rule format: {rule}")
+            logger.error(f"Invalid rule format: {rule}")
             return None
 
         # Initialize the list for directory rules
@@ -312,7 +319,7 @@ class SemanticTreeBuilder:
                     content_rules = self.parse_content_rule(parts[2], "directory", id, index)
                     if content_rules is None:
                         self.add_error(SemanticTreeError.INVALID_DIRECTORY_RULE, f"Failed to parse content rules: {parts[2]}", id, index)
-                        print(f"Error: Failed to parse content rules: {parts[2]}")
+                        logger.error(f"Failed to parse content rules: {parts[2]}")
                         return None
 
                 # Create and add the FileRule with execution nodes and content rules
@@ -326,6 +333,8 @@ class SemanticTreeBuilder:
         return directory_rules
 
     def parse_command_rule(self, rule: str, negation: bool, id: int, index: int) -> Optional[CommandRule]:
+        logger.debug("Parsing command rule: {} for id: {}, index: {}", rule, id, index)
+
         # Split the rule into parts by '->'
         rule = rule.replace(' -> -> ', ' -> ')
         parts = rule.split(' -> ')
@@ -333,7 +342,7 @@ class SemanticTreeBuilder:
         # Check if we have at least two parts for a valid command rule
         if len(parts) < 2:
             self.add_error(SemanticTreeError.INVALID_COMMAND_RULE, rule, id, index)
-            print(f"Error: Invalid command rule format: {rule}")
+            logger.error(f"Invalid command rule format: {rule}")
             return None
 
         # The first part is the command execution node
@@ -346,7 +355,7 @@ class SemanticTreeBuilder:
         first_level_rules = parts[1].strip()
         first_level_content_rules = self.parse_content_rule(first_level_rules, "command", id, index)
         if first_level_content_rules is None:
-            print(f"Error: Failed to parse first level content rules: {first_level_rules}")
+            logger.error(f"Failed to parse first level content rules: {first_level_rules}")
             return None
         content_rules.extend(first_level_content_rules)
 
@@ -356,7 +365,7 @@ class SemanticTreeBuilder:
             second_level_content_rules = self.parse_content_rule(second_level_rules, "command", id, index)
             if second_level_content_rules is None:
                 self.add_error(SemanticTreeError.INVALID_COMMAND_RULE, f"Failed to parse second level content rules: {second_level_rules}", id, index)
-                print(f"Error: Failed to parse second level content rules: {second_level_rules}")
+                logger.error(f"Failed to parse second level content rules: {second_level_rules}")
                 return None
             content_rules.extend(second_level_content_rules)
 
@@ -365,6 +374,8 @@ class SemanticTreeBuilder:
         return command_rule
 
     def parse_process_rule(self, rule: str, negation: bool, id: int, index: int) -> ProcessRule:
+        logger.debug("Parsing process rule: {} for id: {}, index: {}", rule, id, index)
+
         if rule.startswith('r:'):
             rule = rule[2:]
             execution_node = ExecutionNode(type='p', main_target=None, target_pattern=rule)
@@ -373,6 +384,8 @@ class SemanticTreeBuilder:
         return ProcessRule(execution_node=execution_node, negation=negation)
 
     def parse_registry_rule(self, rule: str, negation: bool, id: int, index: int) -> Optional[RegistryRule]:
+        logger.debug("Parsing registry rule: {} for id: {}, index: {}", rule, id, index)
+
         parts = rule.split(' -> ')
         if len(parts) < 1:
             self.add_error(SemanticTreeError.INVALID_REGISTRY_RULE, rule, id, index)
@@ -415,19 +428,19 @@ class SemanticTreeBuilder:
                     value = self._preprocess_regex(value)
                     if not self._is_valid_regex(value):
                         self.add_error(SemanticTreeError.INVALID_CONTENT_OPERATOR, f"Invalid regex in rule: {part}", id, index)
-                        print(f"Error: Invalid regex in rule: {value}")
+                        logger.error(f"Invalid regex in rule: {value}")
                         return None
 
                 elif part.startswith('n:'):
                     parsed_numeric_rule = self._parse_numeric_rule(part[2:].strip(), id, index)
                     if parsed_numeric_rule is None:
-                        print(f"Error: Invalid numeric rule format: {part[2:].strip()}")
+                        logger.error(f"Invalid numeric rule format: {part[2:].strip()}")
                         return None
                     content_operator, value, compare_operator, compare_value = parsed_numeric_rule
 
                 else:
                     self.add_error(SemanticTreeError.INVALID_CONTENT_OPERATOR, f"Rule must start with 'r:' or 'n:': {part}", id, index)
-                    print(f"Error: Rule must start with 'r:' or 'n:': {part}")
+                    logger.error(f"Rule must start with 'r:' or 'n:': {part}")
                     return None
 
                 content_rules.append(ContentRule(
@@ -472,6 +485,8 @@ class SemanticTreeBuilder:
         return 'n', processed_regex, operator, number
 
     def build_tree(self, obj: Dict) -> Union[ConditionNode, None]:
+        logger.info("Building semantic tree for object: {}", obj)
+
         try:
             id = obj.get('id', None)
             if not isinstance(id, int):
@@ -493,13 +508,13 @@ class SemanticTreeBuilder:
                     else:
                         parsed_rules.append(parsed_rule)
                 else:
-                    print(f"Failed to parse rule: {rule}")
+                    logger.error("Failed to parse rule: {}", rule)
 
             # Check if there are any accumulated errors after parsing all rules
             if any(error for error in self.errors if error['id'] == id):
-                print("Errors encountered during build_tree:")
+                logger.error("Errors encountered during build_tree for id: {}", id)
                 for error in self.errors:
-                    print(error)
+                    logger.error("Error: {}", error)
                 return None
 
             # Return the condition node only if no errors were encountered
@@ -507,8 +522,8 @@ class SemanticTreeBuilder:
             return condition_node
 
         except Exception as e:
+            logger.exception("Exception occurred during build_tree: {}", str(e))
             self.add_error(SemanticTreeError.UNKNOWN_ERROR, str(e), id, 0)
-            print(f"Exception encountered: {e}")
             return None
 
     def tree_to_json(self, tree: ConditionNode) -> str:
@@ -518,4 +533,5 @@ class SemanticTreeBuilder:
         return self.errors
 
     def print_tree(self, tree: ConditionNode):
+        logger.info("Printing semantic tree:")
         print(json.dumps(tree.to_dict(), indent=2))
