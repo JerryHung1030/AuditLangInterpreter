@@ -11,7 +11,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
     Last Updated: 2024-09-10
-    Version:      0.1.7
+    Version:      0.1.8
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -338,7 +338,7 @@ class ExecutionNodeExecutor:
             output = output.strip() if output else ""
             error = error.strip() if error else ""
 
-            error = re.sub(r"\[sudo\] password for .+: ?", "", error)
+            error = re.sub(r"\[sudo\] password for .+?: ?", "", error)
 
             if output and error:
                 combined_output = f"{output}\n{error}"
@@ -496,60 +496,60 @@ class ContentRuleChecker:
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def _check_lines(self, lines: List[str]) -> ContentCheckResult:
-        # Iterate through each line in the list of lines
-        for line in lines:
-            match = True
-
-            # Check each rule against the line
-            for rule in self.content_rules:
-                if not self._does_line_match_rule(line, rule):
-                    match = False
-                    break
-
-            # If the line matched all rules, return success (after applying negation if necessary)
-            if match:
-                logger.debug("Line matched all rules: {}", line)
-                if self.rule_negation:
-                    match = not match
-                    logger.debug("ContentRuleChecker-level negation applied to line: {}, Match result after negation: {}", line, match)
-
-                logger.debug("Final result after matching all rules (including negation): {}", match)
-                return ContentCheckResult(success=match)
-
-        # If no line matched all rules, apply negation at the end if necessary
+        # 初始化 match 为 False，表示尚未找到匹配项
         match = False
-        logger.debug("No line matched all rules")
-
-        # Apply rule negation to the final result if necessary
+    
+        # 遍历文件的每一行
+        for line in lines:
+            line_match = True
+    
+            # 遍历每个规则，检查当前行是否符合规则
+            for rule in self.content_rules:
+                rule_match = self._does_line_match_rule(line, rule)
+    
+                # 处理规则的 negation（如果定义了 negation）
+                if rule.get('negation', False):
+                    rule_match = not rule_match
+    
+                # 如果任意规则不匹配该行，则跳出循环
+                if not rule_match:
+                    line_match = False
+                    break
+    
+            # 如果某一行匹配了所有规则
+            if line_match:
+                match = True
+                logger.debug("Line matched all rules: {}", line)
+                break
+    
+        # 在完成行检查后应用 rule_negation
         if self.rule_negation:
             match = not match
-            logger.debug("Negation applied to final result: {}", match)
-
+            logger.debug("ContentRuleChecker-level negation applied to final match result: {}", match)
+    
+        # 返回匹配结果
         return ContentCheckResult(success=match)
 
+    
     def _does_line_match_rule(self, line: str, rule: Dict) -> bool:
         content_operator = rule.get('content_operator')
         value = rule.get('value')
-        content_negation = rule.get('negation', False)
-
-        if content_operator == 'r':
+    
+        if content_operator == 'r':  # Regex match
             match = bool(re.search(value, line))
             logger.debug("Checked line: {}, Regex pattern: {}, Match result: {}", line, value, match)
-        elif content_operator == 'n':
+        elif content_operator == 'n':  # Numeric comparison
             match = self.numeric_compare(line, value, rule.get('compare_operator'), rule.get('compare_value'))
             logger.debug("Numeric compare result: {} for value: {}", match, value)
-        elif content_operator is None:
+        elif content_operator is None:  # Substring match
             match = value in line
             logger.debug("Substring match result: {} for value: {}", match, value)
         else:
             logger.error("Invalid content operator: {}", content_operator)
             return False
-
-        if content_negation:
-            match = not match
-            logger.debug("Content-level negation applied. Final match result: {}", match)
-
+    
         return match
+
 
     def numeric_compare(self, content: str, value: str, compare_operator: str, compare_value_str: str) -> bool:
         try:
