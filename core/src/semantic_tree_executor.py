@@ -496,40 +496,31 @@ class ContentRuleChecker:
             return ContentCheckResult(success=False, error=f"{ExecutionError.UNKNOWN_ERROR.value[1]}: {str(e)}")
 
     def _check_lines(self, lines: List[str]) -> ContentCheckResult:
-        # 初始化 match 为 False，表示尚未找到匹配项
         match = False
     
-        # 遍历文件的每一行
         for line in lines:
             line_match = True
     
-            # 遍历每个规则，检查当前行是否符合规则
             for rule in self.content_rules:
                 rule_match = self._does_line_match_rule(line, rule)
     
-                # 处理规则的 negation（如果定义了 negation）
                 if rule.get('negation', False):
                     rule_match = not rule_match
     
-                # 如果任意规则不匹配该行，则跳出循环
                 if not rule_match:
                     line_match = False
                     break
     
-            # 如果某一行匹配了所有规则
             if line_match:
                 match = True
                 logger.debug("Line matched all rules: {}", line)
                 break
     
-        # 在完成行检查后应用 rule_negation
         if self.rule_negation:
             match = not match
             logger.debug("ContentRuleChecker-level negation applied to final match result: {}", match)
     
-        # 返回匹配结果
         return ContentCheckResult(success=match)
-
     
     def _does_line_match_rule(self, line: str, rule: Dict) -> bool:
         content_operator = rule.get('content_operator')
