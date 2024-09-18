@@ -11,7 +11,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
     Last Updated: 2024-09-10
-    Version:      0.1.8
+    Version:      0.1.8 r1
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -100,17 +100,33 @@ class SSHManager:
         """
         if not self.client:
             raise Exception("SSH connection not established")
+        
+        COMMAND_SEPARATOR = "===== Executing Command ====="
+        OUTPUT_SEPARATOR = "----- Command Output -----"
+        ERROR_SEPARATOR = "##### Command Error #####"
 
         try:
-            logger.debug(f"Executing command: {command}")
+            logger.info(COMMAND_SEPARATOR)
+            logger.info(f"Executing command: {command}")
+            logger.info(COMMAND_SEPARATOR + "\n")
+            
             stdin, stdout, stderr = self.client.exec_command(command)
-            output = stdout.read().decode('utf-8')
-            error = stderr.read().decode('utf-8')
+            output = stdout.read().decode('utf-8').strip()
+            error = stderr.read().decode('utf-8').strip()
             exit_status = stdout.channel.recv_exit_status()
-            logger.debug(f"Command output: {output}")
-            logger.debug(f"Command error: {error}")
-            logger.debug(f"Exit status: {exit_status}")
+            
+            logger.info(OUTPUT_SEPARATOR)
+            logger.info(f"Command output: {output if output else 'No output'}")
+            logger.info(OUTPUT_SEPARATOR + "\n")
+            
+            logger.info(ERROR_SEPARATOR)
+            logger.info(f"Command error: {error if error else 'No error'}")
+            logger.info(ERROR_SEPARATOR + "\n")
+            
+            logger.info(f"Exit status: {exit_status}")
+            
             return output, error, exit_status
+
         except paramiko.SSHException as e:
             logger.error(f"Failed to execute command: {str(e)}")
             raise Exception(f"Failed to execute command: {str(e)}")
@@ -628,7 +644,6 @@ class SemanticTreeExecutor:
             check_id = check['id']
             condition = check['condition']
 
-            logger.info(f"Executing check ID: {check_id} with condition: {condition}")
             logger.info("##########################################################")
             logger.info(f"##### Executing check ID: {check_id} with condition: {condition} #####")
             logger.info("##########################################################")
