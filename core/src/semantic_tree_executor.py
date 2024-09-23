@@ -11,7 +11,7 @@
     Email:        chiehlee.hung@gmail.com
     Created Date: 2024-08-09
     Last Updated: 2024-09-10
-    Version:      0.1.8 r1
+    Version:      0.1.9
     
     License:      Commercial License
                   This software is licensed under a commercial license. 
@@ -504,6 +504,19 @@ class ContentRuleChecker:
                 logger.error("Failed to read file: {}. Error: {}", file_path, error)
                 return ContentCheckResult(success=False, error=f"Failed to read file {file_path}: {error}")
 
+            # If the file is empty
+            if output.strip() == "":
+                logger.debug("File is empty: {}", file_path)
+
+                # If no content rules, we can return success immediately
+                if not self.content_rules:
+                    logger.debug("No content rules to check. Returning success.")
+                    return ContentCheckResult(success=True)
+                # If content rules exist, continue checking
+                else:
+                    logger.debug("Content rules exist. Proceeding to check rules.")
+
+            # Continue to check file content if it’s not empty or rules exist
             logger.debug("File content:\n{}", output)
             return self._check_lines(output.splitlines())
 
@@ -556,7 +569,6 @@ class ContentRuleChecker:
             return False
     
         return match
-
 
     def numeric_compare(self, content: str, value: str, compare_operator: str, compare_value_str: str) -> bool:
         try:
