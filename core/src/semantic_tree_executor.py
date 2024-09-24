@@ -130,6 +130,13 @@ class SSHManager:
         except paramiko.SSHException as e:
             logger.error(f"Failed to execute command: {str(e)}")
             raise Exception(f"Failed to execute command: {str(e)}")
+        
+    def execute_command_with_sudo(self, command: str, os_type: str, use_sudo: bool = False) -> Tuple[str, str, int]:
+        if use_sudo and os_type:
+            if os_type == "linux":
+                command = f"export LC_ALL=C && echo {self.password} | sudo -S {command}"
+        output, error, exit_status = self.execute_command(command)
+        return output.strip(), error.strip(), exit_status
 
     def close(self) -> None:
         """
@@ -255,10 +262,11 @@ class ExecutionNodeExecutor:
         except Exception as e:
             logger.exception(f"Command execution failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.COMMAND_FAILED.value[1]}: {str(e)}")
-
+    
     def determine_actual_os_type(self, ssh_manager: SSHManager) -> str:
         try:
-            output, error, exit_status = ssh_manager.execute_command('uname')
+            command = 'uname'
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, "", use_sudo=True)
             logger.debug(f"OS type detected: {output.strip()}")
             if exit_status != 0:
                 raise Exception("Failed to detect OS type")
@@ -276,9 +284,8 @@ class ExecutionNodeExecutor:
 
         try:
             command = self.command_builder.build_directory_exsistence_command(self.main_target)
-            command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
             logger.debug(f"Executing directory existence check with command: {command}")
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             if output:
                 return ExecutionResult(success=True, output=self.main_target)
             return ExecutionResult(success=False, output=self.main_target)
@@ -293,9 +300,8 @@ class ExecutionNodeExecutor:
 
         try:
             command = self.command_builder.build_file_existence_command(self.main_target)
-            command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
             logger.debug(f"Executing file existence check with command: {command}")
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             output = output.strip() if output else ""
 
             if "not exists" in output:
@@ -317,9 +323,8 @@ class ExecutionNodeExecutor:
 
         try:
             command = self.command_builder.build_directory_listing_command(self.main_target)
-            command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {command}"
             logger.debug(f"Executing file listing with command: {command}")
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             if output:
                 filtered_files = self._filter_files_with_pattern(output, self.target_pattern)
                 if filtered_files:
@@ -348,9 +353,9 @@ class ExecutionNodeExecutor:
 
         try:
             if self.os_type == "linux":
-                command = f"export LC_ALL=C && echo {ssh_manager.password} | sudo -S {self.main_target}"
+                command = f"{self.main_target}"
             logger.debug(f"Running command: {command}")  # Debug log for command execution
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             output = output.strip() if output else ""
             error = error.strip() if error else ""
 
@@ -379,7 +384,7 @@ class ExecutionNodeExecutor:
         try:
             command = self.command_builder.build_process_check_command(self.main_target)
             logger.debug(f"Checking process existence with command: {command}")
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             if output:
                 return ExecutionResult(success=True, output=self.main_target)
             return ExecutionResult(success=False, output=self.main_target)
@@ -395,7 +400,7 @@ class ExecutionNodeExecutor:
                 command = self.command_builder.build_registry_check_command(self.main_target, self.sub_target)
 
             logger.debug(f"Checking registry key with command: {command}")
-            output, error, exit_status = ssh_manager.execute_command(command)
+            output, error, exit_status = ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             if output:
                 return ExecutionResult(success=True, output=output.strip())
             return ExecutionResult(success=False, output=output.strip())
@@ -495,11 +500,8 @@ class ContentRuleChecker:
         try:
             logger.debug("Reading and checking file: {}", file_path)
             command = self.command_builder.build_read_file_command(file_path)
-
-            if self.os_type == "linux":
-                command = f"export LC_ALL=C && echo {self.ssh_manager.password} | sudo -S " + command
-            output, error, exit_status = self.ssh_manager.execute_command(command)
-
+            
+            output, error, exit_status = self.ssh_manager.execute_command_with_sudo(command, self.os_type, use_sudo=True)
             if exit_status != 0:
                 logger.error("Failed to read file: {}. Error: {}", file_path, error)
                 return ContentCheckResult(success=False, error=f"Failed to read file {file_path}: {error}")
