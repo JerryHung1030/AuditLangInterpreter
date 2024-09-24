@@ -1,0 +1,141 @@
+{
+  "free5GC/AU-2/AU-2.py": [
+    "out = ssh_exec(\"logger 'AU-2 TEST' && grep 'AU-2 TEST' /var/log/messages | wc -l\\n\")",
+    "verify_result[\"AU-2_TestScript\"] = \"logger 'AU-2 TEST' && grep 'AU-2 TEST' /var/log/messages | wc -l\""
+  ],
+  "free5GC/AU-5/AU-5.py": [
+    "\"dpkg-query -s aide\",",
+    "\"dpkg-query -s aide-common\","
+  ],
+  "free5GC/SC-16/SC-16.py": [
+    "cmd_raw = \"cmm amfCipheringAlgorithm show -f json\"",
+    "cmd_1 = \"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"snow3G\\|aes\\|zuc\\\" | wc -l\\n\"",
+    "cmd_2 = \"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"none\\|noCiphering\\\" | wc -l\\n\""
+  ],
+  "free5GC/SC-16/common/sshClient.py": [],
+  "free5GC/SC-16/common/initconfig.py": [],
+  "free5GC/AU-4/AU-4.py": [
+    "out = ssh_exec(\"df -l / | awk '{print $4}'\\n\")"
+  ],
+  "free5GC/AU-3/AU-3.py": [
+    "f\"log=$(echo '{password}' | sudo -S docker logs -n1 smf 2>&1);\"",
+    "\"echo $(grep -o -E 'TRAC|DEBU|INFO|WARN|ERRO|FATA|PANI' <<< $log);\"",
+    "\"echo $(grep -o [0-2][0-9]:[0-5][0-9]:[0-5][0-9] <<< $log);\"",
+    "r\"echo $(grep -o -E '[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+' <<< $log);\"",
+    "\"echo $(grep -o -E 'Main|Init|CFG|CTX|GIN|Consumer|GSM|PFCP|PduSess' <<< $log);\"",
+    "\"echo $(grep -o -E -i 'success|fail' <<< $log);\""
+  ],
+  "free5GC/AC-4/AC-4.py": [
+    "channel.send(\"cmm firewallRule list | wc -l\\n\")",
+    "channel.send(\"echo '\"+password+\"' | sudo -S timeout 5 tcpdump -c 50 -i \"+interface+\" -nn \\\"arp and not net \"+network+\"\\\" 2> /dev/null | wc -l\\n\")",
+    "verify_result[\"AC-4_TestScript\"] = \"cmm firewallRule list | wc -l; echo '+password+' | sudo -S timeout 5 tcpdump -c 50 -i +interface+ -nn \\\"arp and not net +network+\\\" 2> /dev/null | wc -l\""
+  ],
+  "free5GC/AC-3/AC-3.py": [
+    "out = ssh_exec_cmmsecurity(\"fsdumpgroups | grep gidNumber | sort | uniq | wc -l\\n\")",
+    "out2 = ssh_exec_cmm(\"echo '\"+cmm_pw+\"' | sudo -S cmm-secure-log-analyzer -s | awk '{print$1}' | sed 's\\\\:$\\\\\\\\g' | sort | uniq | wc -l\\n\")",
+    "verify_result[\"AC-3_TestScript\"] = \"fsdumpgroups | grep gidNumber | sort | uniq | wc -l; echo 'cmm_pw' | sudo -S cmm-secure-log-analyzer -s | awk '{print$1}' | sed 's\\\\:$\\\\\\\\g' | sort | uniq | wc -l\""
+  ],
+  "free5GC/MA-4/MA-4.py": [
+    "cmd = \"echo '\"+password+\"' | sudo -S grep -i sshd.*accept /var/log/secure | wc -l && sudo grep -i sshd.*open /var/log/secure | wc -l && sudo grep -i sshd.*close /var/log/secure | wc -l\"",
+    "verify_result[\"MA-4_TestScript\"] = \"echo '+password+' | sudo -S grep -i sshd.*accept /var/log/secure | wc -l && sudo grep -i sshd.*open /var/log/secure | wc -l && sudo grep -i sshd.*close /var/log/secure | wc -l\""
+  ],
+  "free5GC/IA-5/IA-5.py": [
+    "cmd = \"grep -E '^minlen' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^lcredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' &&grep -E '^ucredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^dcredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^ocredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && echo '\"+password+\"' | sudo -S grep `whoami` /etc/shadow && sudo pwck -r -q | echo $?\"",
+    "verify_result[\"IA-5_TestScript\"] = \"grep -E '^minlen' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^lcredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' &&grep -E '^ucredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^dcredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && grep -E '^ocredit' /etc/security/pwquality.conf | grep -oP '\\d\\d?' || echo '0' && echo 'password' | sudo -S grep `whoami` /etc/shadow && sudo pwck -r -q | echo $?\""
+  ],
+  "free5GC/AC-17/AC-17.py": [
+    "out = ssh_exec(\"echo '\"+password+\"' | sudo -S grep sshd /var/log/secure | wc -l && grep 'grep sshd' /home/`logname`/.bash_history | wc -l\\n\")",
+    "verify_result[\"AC-17_TestScript\"] = \"echo '+password+' | sudo -S grep sshd /var/log/secure | wc -l && grep 'grep sshd' /home/`logname`/.bash_history | wc -l\""
+  ],
+  "free5GC/AC-5/AC-5.py": [
+    "\"dpkg-query -W -f='${binary:Package}\\t${Status}\\t${db:Status-Status}\\\\n' apparmor\","
+  ],
+  "free5GC/IA-3/IA-3.py": [
+    "cmd = \"sudo tail -n 100 /var/log/secure | grep -i sshd.*`logname` | wc -l && sudo tail -n 100 /var/log/secure | grep -i sshd |  grep -E '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' | wc -l \\n\""
+  ],
+  "free5GC/IA-3/common/sshClient.py": [],
+  "free5GC/IA-3/common/initconfig.py": [],
+  "free5GC/IA-4/IA-4.py": [
+    "cmd = \"fsdumpgroups | grep -A 5 'cn=' | grep 'UID:' | awk -F ':' '{print$2}'\"",
+    "#         stdin, stdout, stderr = ssh.exec_command(\"fsdumpgroups | grep -A 2 'cn: _nokfsuipmgroot' | grep '^UID:' | awk -F ':' '{print$2}'\")"
+  ],
+  "free5GC/IA-4/common/sshClient.py": [],
+  "free5GC/IA-4/common/initconfig.py": [],
+  "free5GC/CM-7/CM-7.py": [
+    "(f\"echo '{password}' | sudo -S sshd -T\", \"^allowtcpforwarding && r:no$\"),"
+  ],
+  "free5GC/CM-9/CM-9.py": [
+    "(f\"echo '{password}' | sudo -S sshd -T\", \"^usepam yes\"),"
+  ],
+  "free5GC/SC-3/SC-3.py": [
+    "\"sestatus 2>/dev/null | grep 'SELinux status:' || echo 'Command (sestatus) not found';\"",
+    "\"systemctl is-active apparmor\""
+  ],
+  "free5GC/SI-4/SI-4.py": [
+    "cmm_alarm_setting_cmd = \"cmm alarmHistory meta -f json\""
+  ],
+  "free5GC/SI-4/common/sshClient.py": [],
+  "free5GC/SI-4/common/initconfig.py": [],
+  "free5GC/AU-10/AU-10.py": [
+    "ssh_exec_cmmsecurity('cmm systemInfo list')",
+    "out = ssh_exec_cmm(\"echo '\"+cmm_pw+\"' | sudo -S tail /var/log/cli_cmd.log | grep -E 'cmm systemInfo list.*user=cmmsecurity' \\n echo '\\n'$?\")",
+    "verify_result[\"AU-10_TestScript\"] = \"echo '+cmm_pw+' | sudo -S tail /var/log/cli_cmd.log | grep -E 'cmm systemInfo list.*user=cmmsecurity' | echo $?\""
+  ],
+  "free5GC/SI-2/SI-2.py": [
+    "last_upgrade = ssh_exec(\"grep -h -s upgrade /var/log/dpkg.log /var/log/yum.log | \""
+  ],
+  "free5GC/SI-2/common/sshClient.py": [],
+  "free5GC/SI-2/common/initconfig.py": [],
+  "free5GC/AU-11/AU-11.py": [
+    "out = ssh_exec(\"date -d \\\"`echo '\"+password+\"' | sudo -S cmm-secure-log-analyzer --full -u cmm | grep -E 'First log.*'  | awk '{print$4,$5,$6}'`\\\" '+;%s;%Y-%m-%d %H:%M:%S' && date -d \\\"`stat /lost+found/ | grep Modify | awk '{print $2,$3,$4}'`\\\" '+%s;%Y-%m-%d %H:%M:%S' && date '+%s;%Y-%m-%d %H:%M:%S'\")",
+    "verify_result[\"AU-11_TestScript\"] = \"date -d \\\"`echo '+password+' | sudo -S cmm-secure-log-analyzer --full -u cmm | grep -E 'First log.*'  | awk '{print$4,$5,$6}'`\\\" '+;%s;%Y-%m-%d %H:%M:%S' && date -d \\\"`stat /lost+found/ | grep Modify | awk '{print $2,$3,$4}'`\\\" '+%s;%Y-%m-%d %H:%M:%S' && date '+%s;%Y-%m-%d %H:%M:%S'\""
+  ],
+  "free5GC/SC-13/SC-13.py": [
+    "\"sshd -T\","
+  ],
+  "free5GC/AU-8/AU-8.py": [
+    "out = ssh_exec(\"date +%s && date -u '+%Y-%m-%d %H:%M:%S UTC'\")"
+  ],
+  "free5GC/SC-15/SC-15.py": [
+    "testscript_1 = \"sudo cmm-secure-log-analyzer -u cmm | grep password | grep cmm \\n\""
+  ],
+  "free5GC/SC-15/common/sshClient.py": [],
+  "free5GC/SC-15/common/initconfig.py": [],
+  "free5GC/SC-12/SC-12.py": [
+    "('sshd -T', '^Ciphers && r:3des-cbc|aes128-cbc|aes192-cbc|aes256-cbc'),"
+  ],
+  "free5GC/AU-9/AU-9.py": [
+    "out = ssh_exec(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'` \\n echo $?\")",
+    "verify_result[\"AU-9_TestScript\"] = \">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'` | echo $?\""
+  ],
+  "free5GC/AU-7/AU-7.py": [
+    "(\"systemctl is-enabled rsyslog\", \"enabled\"),"
+  ],
+  "free5GC/IA-7/IA-7.py": [
+    "cmd = \"echo '\"+password+\"' | sudo -S grep root /etc/shadow\"",
+    "verify_result[\"IA-7_TestScript\"] = \"echo 'password' | sudo -S grep `whoami` /etc/shadow\""
+  ],
+  "free5GC/AC-6/AC-6.py": [
+    "('findmnt --kernel /tmp', 'noexec'),"
+  ],
+  "free5GC/SA-18/SA-18.py": [
+    "testscript_1 = \"sudo cmm-audit-cmd-analyzer -u cmm\\n\"",
+    "testscript_2 = \">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\""
+  ],
+  "free5GC/SA-18/common/sshClient.py": [],
+  "free5GC/SA-18/common/initconfig.py": [],
+  "free5GC/SC-7/SC-7.py": [
+    "out = ssh_exec(\"systemctl is-active iptables firewalld ufw\")"
+  ],
+  "free5GC/CM-3/CM-3.py": [
+    "+ \"' | sudo -S aureport 2>/dev/null | grep 'changes in configuration' | awk '{print $6}' && date -d \\\"`aureport 2>/dev/null | grep 'Range of time' | awk '{print $6}'`\\\" +%s && date '+%s'\""
+  ],
+  "free5GC/SC-8/SC-8.py": [
+    "f\"echo '{password}' | sudo -S sshd -T\",",
+    "f\"echo '{password}' | sudo -S sshd -T\",",
+    "f\"echo '{password}' | sudo -S sshd -T\","
+  ],
+  "free5GC/CA-7/CA-7.py": [
+    "cmd = \"grep cpu /var/log/appliance-system-monitor.log | wc -l && grep memory /var/log/appliance-system-monitor.log | wc -l\""
+  ]
+}

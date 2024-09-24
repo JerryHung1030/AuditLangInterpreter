@@ -1,0 +1,38 @@
+{
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/main.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/oam_common/initconfig.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/oam_common/common.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-12.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-8.py": [
+    "kubectl_pods_info_cmd = 'kubectl get pods -o json --kubeconfig=oam_kubeconfig'"
+  ],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-9.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/SC-2.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-6.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/IA-5.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-2.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/CA-7.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/IA-4.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-3.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/__init__.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AC-20.py": [
+    "kubectl_ns_info_cmd = 'kubectl get ns -o json --kubeconfig=oam_kubeconfig'"
+  ],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-7.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/SC-8.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/MA-6.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AC-17.py": [
+    "kubectl_ns_info_cmd = 'kubectl get ns -o json --kubeconfig=oam_kubeconfig'"
+  ],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-4.py": [
+    "kubectl_pods_info_cmd = 'kubectl get pods -o json --kubeconfig=oam_kubeconfig'",
+    "kubectl_pvc_info_cmd = 'kubectl get pvc -o json --kubeconfig=oam_kubeconfig'"
+  ],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AC-3.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/MA-2.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/SA-18.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/IA-2.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/SI-4.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-10.py": [],
+  "\u6578\u8f49\u96625G-OAM/OAM-Verify/script/AU-11.py": []
+}

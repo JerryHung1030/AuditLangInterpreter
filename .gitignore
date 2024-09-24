@@ -1,8 +1,53 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*.so
+
+# pytest cache directory
 .pytest_cache/
+
+# Virtual environment directories
 .venv/
-venv
+venv/
 env/
+
+# Logs
+*.log
+
+# Archives
+*.zip
+
+# Node modules (if using frontend frameworks)
 demo/frontend/node_modules/
 demo/frontend/package-lock.json
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python virtual environment
+Pipfile
+Pipfile.lock
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+*.cover
+*.py,cover
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore environment variable files
+.env
+.env.*
+
+# Miscellaneous
+*.tmp
+*.temp

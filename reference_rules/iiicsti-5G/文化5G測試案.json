@@ -1,0 +1,86 @@
+{
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SC-16/SC-16.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"snow3G\\|aes\\|zuc\\\" | wc -l\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"none\\|noCiphering\\\" | wc -l\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-4/AU-4.py": [
+    "channel.send(\"df -l / | awk '{print $4}'\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-3/AU-3.py": [
+    "channel.send(\"logger 'AU-3 TEST' && grep 'AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `date '+%b.*%d.*%H'`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `hostname`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `logname`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E -i 'Fail*|Succe*' /var/log/syslog | wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AC-4/InformationFlowEnforcement.py": [
+    "channel.send(\"cmm firewallRule list | wc -l\\n\")",
+    "channel.send(\"sudo timeout 5 tcpdump -c 50 -i \"+interface+\" -nn \\\"arp and not net \"+network+\"\\\" 2> /dev/null | wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AC-3/AccessEnforcement.py": [
+    "channel.send(\"fsdumpgroups | grep gidNumber | sort | uniq | wc -l\\n\")",
+    "channel.send(\"sudo cmm-secure-log-analyzer -s | awk '{print$1}' | sed 's\\\\:$\\\\\\\\g' | sort | uniq | wc -l\\n\")",
+    "out = out.split('[sudo] password for cmm:')"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/MA-4/MA-4.py": [
+    "channel.send(\"grep -i sshd.*accept /var/log/auth.log | wc -l && grep -i sshd.*open /var/log/auth.log | wc -l && grep -i sshd.*close /var/log/auth.log | wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/IA-5/IA-5.py": [
+    "channel.send(\"sudo grep `whoami` /etc/shadow\\n\")",
+    "channel.send(\"sudo pwck -r -q\\n\")",
+    "channel.send(\"echo $?\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/IA-2/IA-2.py": [],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/IA-4/IA-4.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"fsdumpgroups | grep -A 2 'cn: _nokfsuipmgroot' | grep '^UID:' | awk -F ':' '{print$2}'\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/MA-2/MA-2.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm alarm active list | awk -F '|' '{print$5}' | sed 's/ //g' | grep -v SEVERITY | sort | uniq | sed '1d' |wc -l\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SI-4/SI-4.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"ping \"+logserver_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-10/AU-10.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer --full -u cmm | grep sshd|wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-11/AU-11.py": [
+    "channel.send(\"date -d \\\"`stat /var/log/\\`ls /var/log/ | grep syslog | tail -n 1\\` | grep Modify | awk '{print $2}'`\\\" +%s\\n\")",
+    "channel.send(\"date '+%s %m %d'\\n\")",
+    "channel.send(\"rm -rf /home/`whoami`/AU-11\\n\")",
+    "channel.send(\"mkdir /home/`whoami`/AU-11 && cp /var/log/`ls /var/log/ | grep syslog | tail -n 1` /home/`whoami`/AU-11/ && gunzip /home/`whoami`/AU-11/`ls /var/log/ | grep syslog | tail -n 1`\\n\")",
+    "channel.send(\"head -n 1 /home/`whoami`/AU-11/`ls /home/\\`whoami\\`/AU-11/ | grep syslog | tail -n 1` | awk '{print $1,$2}'\\n\")",
+    "channel.send(\"rm -rf /home/`whoami`/AU-11\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SC-2/SC-2.py": [],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/CA-7_remote/CA-7_remote.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"ping \"+ping_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-8/AU-8.py": [
+    "stdin, stdout, stderr = ssh.exec_command('date')"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SC-15/SC-15.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer -u cmm | grep password\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-9/AU-9.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer --full -u cmm | grep sshd|wc -l\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-7/AuditReductionAndReportGeneration.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/IA-7/IA-7.py": [
+    "channel.send(\"sudo grep `whoami` /etc/shadow\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SA-18/SA-18.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/SC-8/SC-8.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfIntegrityAlgorithm show | grep \\\"integrityAlgPrio1\\\" | grep -o \\\"snow3G\\|aes\\|zuc\\\" | wc -l\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfIntegrityAlgorithm show | grep \\\"integrityAlgPrio1\\\" | grep -o \\\"none\\|noCiphering\\\" | wc -l\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/AU-12/AuditGeneration.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "\u6587\u53165G\u6e2c\u8a66\u6848/CA-7/CA-7.py": [
+    "cmd = \"ping \"+ping_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\""
+  ]
+}

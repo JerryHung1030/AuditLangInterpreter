@@ -59,13 +59,13 @@ const Dashboard = () => {
                 className="text-2xl mb-2 text-yellow-100"
                 style={{ fontFamily: 'MonoLisaScript' }}
               >
-                <strong>CSTI-Intern:</strong> Bolt(林柏辰)
+                {/* <strong>CSTI-Intern:</strong> Bolt(林柏辰) */}
               </p>
               <p
                 className="text-2xl mb-2 text-yellow-100"
                 style={{ fontFamily: 'MonoLisaScript' }}
               >
-                <strong>Advisor:</strong> Jerryhung(洪潔理), Dickson(邱繁敏)
+                {/* <strong>Advisor:</strong> Jerryhung(洪潔理), Dickson(邱繁敏) */}
               </p>
             </div>
             <p className="text-4xl text-blue-300 mb-4">

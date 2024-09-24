@@ -1,0 +1,114 @@
+{
+  "main/AU-2/AU-2.py": [
+    "channel.send(\"logger 'AU-2 TEST' && grep 'AU-2 TEST' /var/log/syslog | tail -1 | wc -l\\n\")",
+    "channel.send(\"grep '\"+log_str+\"' /var/log/syslog | tail -1 | wc -l\\n\")"
+  ],
+  "main/SC-16/SC-16.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"snow3G\\|aes\\|zuc\\\" | wc -l\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfCipheringAlgorithm show | grep \\\"cipheringAlgPrio1\\\" | grep -o \\\"none\\|noCiphering\\\" | wc -l\")"
+  ],
+  "main/AU-4/AU-4.py": [
+    "channel.send(\"df -l / | awk '{print $4}'\\n\")"
+  ],
+  "main/AU-3/AU-3.py": [
+    "out = ssh_exec(\"if [ `grep -E -i 'Debian' /etc/*-release | wc -l` != 0 ]; then logger 'AU-3 TEST' && grep 'AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `date '+%b.*%d.*%H'`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `hostname`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E `logname`'.*AU-3 TEST' /var/log/syslog | tail -1 | wc -l && grep -E -i 'Fail*|Succe*' /var/log/syslog | wc -l; else if [ `grep -E -i 'Redhat' /etc/*-release | wc -l` != 0 ]; then logger 'AU-3 TEST' && grep 'AU-3 TEST' /var/log/messages | tail -1 | wc -l && grep -E `date '+%d.*%H'`'.*AU-3 TEST' /var/log/messages | tail -1 | wc -l && grep -E `hostname -s`'.*AU-3 TEST' /var/log/messages | tail -1 | wc -l && grep -E `logname`'.*AU-3 TEST' /var/log/messages | tail -1 | wc -l && grep -E -i 'Fail*|Succe*' /var/log/messages | wc -l; else echo 'Error'; fi fi\")"
+  ],
+  "main/AC-4/InformationFlowEnforcement.py": [
+    "channel.send(\"cmm firewallRule list | wc -l\\n\")",
+    "channel.send(\"sudo timeout 5 tcpdump -c 50 -i \"+interface+\" -nn \\\"arp and not net \"+network+\"\\\" 2> /dev/null | wc -l\\n\")"
+  ],
+  "main/AC-3/AccessEnforcement.py": [
+    "channel.send(\"fsdumpgroups | grep gidNumber | sort | uniq | wc -l\\n\")",
+    "channel.send(\"sudo cmm-secure-log-analyzer -s | awk '{print$1}' | sed 's\\\\:$\\\\\\\\g' | sort | uniq | wc -l\\n\")",
+    "out = out.split('[sudo] password for cmm:')"
+  ],
+  "main/AC-20/AC-20.py": [
+    "out = ssh_exec(\"echo 'AC-20 TEST'\")"
+  ],
+  "main/MA-4/MA-4.py": [
+    "channel.send(\"grep -i sshd.*accept /var/log/auth.log | wc -l && grep -i sshd.*open /var/log/auth.log | wc -l && grep -i sshd.*close /var/log/auth.log | wc -l\\n\")"
+  ],
+  "main/IA-5/IA-5.py": [
+    "channel.send(\"sudo grep `whoami` /etc/shadow\\n\")",
+    "channel.send(\"sudo pwck -r -q\\n\")",
+    "channel.send(\"echo $?\\n\")"
+  ],
+  "main/IA-2/IA-2.py": [],
+  "main/AC-17/AC-17.py": [
+    "out = ssh_exec(\"if [ `grep -E -i 'Debian' /etc/*-release | wc -l` != 0 ]; then grep sshd /var/log/auth.log | wc -l && grep 'grep sshd' /home/`logname`/.bash_history | wc -l; else if [ `grep -E -i 'Redhat' /etc/*-release | wc -l` != 0 ]; then grep sshd /var/log/secure | wc -l && grep 'grep sshd' /home/`logname`/.bash_history | wc -l; else echo 'Error'; fi fi\")"
+  ],
+  "main/IA-3/IA-3.py": [
+    "channel.send(\"grep -i sshd.*`logname` /var/log/auth.log | wc -l && grep -i sshd /var/log/auth.log | grep -E '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' | wc -l \\n\")"
+  ],
+  "main/IA-4/IA-4.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"fsdumpgroups | grep -A 2 'cn: _nokfsuipmgroot' | grep '^UID:' | awk -F ':' '{print$2}'\")"
+  ],
+  "main/MA-2/MA-2.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm alarm active list | awk -F '|' '{print$5}' | sed 's/ //g' | grep -v SEVERITY | sort | uniq | sed '1d' |wc -l\")"
+  ],
+  "main/SI-4/SI-4.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"ping \"+logserver_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\\n\")"
+  ],
+  "main/AU-10/AU-10.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer --full -u cmm | grep sshd|wc -l\\n\")"
+  ],
+  "main/SI-2/SI-2.py": [
+    "out = ssh_exec(\"if [ `grep -E -i 'Debian' /etc/*-release | wc -l` != 0 ]; then date -d \\\"`grep 'upgrade'  /var/log/dpkg.log | tail -1 | awk '{print $1}'`\\\" +%s && date '+%s'; else if [ `grep -E -i 'Redhat' /etc/*-release | wc -l` != 0 ]; then date -d \\\"`grep 'updated'  /var/log/yum.log | tail -1 | awk '{print $1}'`\\\" +%s && date '+%s'; else echo 'Error'; fi fi\")"
+  ],
+  "main/AU-11/AU-11.py": [
+    "channel.send(\"date -d \\\"`stat /var/log/\\`ls /var/log/ | grep syslog | tail -n 1\\` | grep Modify | awk '{print $2}'`\\\" +%s\\n\")",
+    "channel.send(\"date '+%s:%m:%d'\\n\")",
+    "channel.send(\"rm -rf /home/`whoami`/AU-11\\n\")",
+    "channel.send(\"mkdir /home/`whoami`/AU-11 && cp /var/log/`ls /var/log/ | grep syslog | tail -n 1` /home/`whoami`/AU-11/ && gunzip /home/`whoami`/AU-11/`ls /var/log/ | grep syslog | tail -n 1`\\n\")",
+    "channel.send(\"head -n 1 /home/`whoami`/AU-11/`ls /home/\\`whoami\\`/AU-11/ | grep syslog | tail -n 1` | awk '{print $1\\\":\\\"$2}'\\n\")",
+    "channel.send(\"rm -rf /home/`whoami`/AU-11\\n\")"
+  ],
+  "main/SC-2/SC-2.py": [],
+  "main/CM-10/CM-10.py": [
+    "out = ssh_exec(\"if [ `grep -E -i 'Debian' /etc/*-release | wc -l` != 0 ]; then apt list --installed; else if [ `grep -E -i 'Redhat' /etc/*-release | wc -l` != 0 ]; then rpm -qa; else echo 'Error'; fi fi\")"
+  ],
+  "main/CA-7_remote/CA-7_remote.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"ping \"+ping_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\\n\")"
+  ],
+  "main/AU-2_exec/AU-2.py": [
+    "out = ssh_exec(\"logger 'AU-2 TEST' && grep 'AU-2 TEST' /var/log/syslog | tail -1 | wc -l \\n grep '\"+log_str+\"' /var/log/syslog | tail -1 | wc -l\")"
+  ],
+  "main/AU-8/AU-8.py": [
+    "stdin, stdout, stderr = ssh.exec_command('date')"
+  ],
+  "main/SC-15/SC-15.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer -u cmm | grep password\\n\")"
+  ],
+  "main/AU-9/AU-9.py": [
+    "channel.send(\"sudo cmm-secure-log-analyzer --full -u cmm | grep sshd|wc -l\\n\")"
+  ],
+  "main/AU-7/AuditReductionAndReportGeneration.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "main/IA-7/IA-7.py": [
+    "channel.send(\"sudo grep `whoami` /etc/shadow\\n\")"
+  ],
+  "main/AC-17_cmm/AC-17.py": [
+    "out = ssh_exec(\"grep sshd /var/log/auth.log | wc -l && grep 'grep sshd' /var/log/cli_cmd.log | wc -l\")"
+  ],
+  "main/SA-18/SA-18.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "main/CM-3/CM-3.py": [
+    "out = ssh_exec(\"aureport | grep 'changes in configuration' | awk '{print $6}' && date -d \\\"`aureport | grep 'Range of time' | awk '{print $6}'`\\\" +%s && date '+%s'\")"
+  ],
+  "main/SC-8/SC-8.py": [
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfIntegrityAlgorithm show | grep \\\"integrityAlgPrio1\\\" | grep -o \\\"snow3G\\|aes\\|zuc\\\" | wc -l\\n\")",
+    "stdin, stdout, stderr = ssh.exec_command(\"cmm amfIntegrityAlgorithm show | grep \\\"integrityAlgPrio1\\\" | grep -o \\\"none\\|noCiphering\\\" | wc -l\")"
+  ],
+  "main/AU-12/AuditGeneration.py": [
+    "channel.send(\"sudo cmm-audit-cmd-analyzer -u cmm\\n\")",
+    "channel.send(\">> `ausearch -tm pts -k cmm-su -i 2>&1 | grep logs | awk '{print$6}'`\\n\")"
+  ],
+  "main/CA-7/CA-7.py": [
+    "cmd = \"ping \"+ping_ip+\" -c1 -t1 | grep \\\"time=\\\" | wc -l\""
+  ]
+}
