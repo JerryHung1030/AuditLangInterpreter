@@ -1,10 +1,10 @@
 # ===============================================================================
 # Rule Set: NIST SP 800-53 Compliance Rule Set for Ubuntu 20.04
-# Description: This YAML file contains security compliance checks primarily 
-#              based on the NIST SP 800-53 framework. It is specifically designed 
-#              for systems running Ubuntu 20.04, ensuring that critical system 
+# Description: This YAML file contains security compliance checks primarily
+#              based on the NIST SP 800-53 framework. It is specifically designed
+#              for systems running Ubuntu 20.04, ensuring that critical system
 #              configurations meet the security standards outlined in NIST SP 800-53.
-#              The rules cover various security controls and can be expanded to 
+#              The rules cover various security controls and can be expanded to
 #              accommodate additional requirements as needed.
 #
 # Author:       Dickson Chiou, Jerry Hung
@@ -18,13 +18,13 @@
 #               Redistribution or modification in any form without explicit
 #               written permission from the author is strictly prohibited.
 #
-#               You may use this rule set solely for internal business purposes 
-#               within iiicsti. External distribution, sublicensing, or resale 
+#               You may use this rule set solely for internal business purposes
+#               within iiicsti. External distribution, sublicensing, or resale
 #               is not allowed.
 #
-# Notes:        This rule set is specifically designed for Ubuntu 20.04 environments 
-#               that require compliance with NIST SP 800-53. Future expansions 
-#               will include other operating systems and additional compliance 
+# Notes:        This rule set is specifically designed for Ubuntu 20.04 environments
+#               that require compliance with NIST SP 800-53. Future expansions
+#               will include other operating systems and additional compliance
 #               standards such as CIS, HIPAA, and ISO 27001.
 # ===============================================================================
 
@@ -2044,7 +2044,7 @@ checks:
     rules:
       - "c:systemctl is-enabled ufw.service -> r:enabled"
       - "c:systemctl is-active ufw -> r:^active"
-      - "c:ufw status -> r:active"
+      - "c:ufw status -> r:^active"
 
   # 3.4.1.4 Ensure ufw loopback traffic is configured. (Automated)
   - id: 19083
@@ -2201,7 +2201,7 @@ checks:
       - "c:nft list ruleset -> r:hook forward"
       - "c:nft list ruleset -> r:hook output"
 
-  
+
   # 3.4.2.7 Ensure nftables outbound and established connections are configured. (Manual) - Not Implemented
 
   # 3.4.2.8 Ensure nftables default deny firewall policy. (Automated)
