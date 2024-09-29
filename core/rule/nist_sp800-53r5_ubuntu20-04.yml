@@ -2969,7 +2969,7 @@ checks:
       - pci_dss_v4.0: ["2.2.7", "4.1.1", "4.2.1", "4.2.1.2", "4.2.2", "8.3.2"]
     condition: all
     rules:
-      - "not c:sshd -T -> r:MACs && r:hmac-md5|hmac-md5-96|hmac-ripemd160|hmac-sha1|hmac-sha1-96|umac-64@openssh.com|hmac-md5-etm@openssh.com|hmac-md5-96-etm@openssh.com|hmac-ripemd160-etm@openssh.com|hmac-sha1-etm@openssh.com|hmac-sha1-96-etm@openssh.com|umac-64-etm@openssh.com"
+      - "not c:sshd -T -> r:macs && r:hmac-md5|hmac-md5-96|hmac-ripemd160|hmac-sha1|hmac-sha1-96|umac-64@openssh.com|hmac-md5-etm@openssh.com|hmac-md5-96-etm@openssh.com|hmac-ripemd160-etm@openssh.com|hmac-sha1-etm@openssh.com|hmac-sha1-96-etm@openssh.com|umac-64-etm@openssh.com"
 
   # 4.2.15 Ensure only strong Key Exchange algorithms are used. (Automated)
   - id: 19122
