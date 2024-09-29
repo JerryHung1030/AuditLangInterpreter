@@ -3790,11 +3790,11 @@ checks:
       - pci_dss_v4.0: ["10.2.1", "10.2.1.1", "10.2.1.2", "10.2.1.3", "10.2.1.4", "10.2.1.5", "10.2.1.6", "10.2.1.7", "10.2.2", "5.3.4", "6.4.1", "6.4.2"]
     condition: all
     rules:
-      - "f:/etc/systemd/journald.conf -> r:SystemMaxUse="
-      - "f:/etc/systemd/journald.conf -> r:SystemKeepFree="
-      - "f:/etc/systemd/journald.conf -> r:RuntimeMaxUse="
-      - "f:/etc/systemd/journald.conf -> r:RuntimeKeepFree="
-      - "f:/etc/systemd/journald.conf -> r:MaxFileSec="
+      - "f:/etc/systemd/journald.conf -> r:^SystemMaxUse="
+      - "f:/etc/systemd/journald.conf -> r:^SystemKeepFree="
+      - "f:/etc/systemd/journald.conf -> r:^RuntimeMaxUse="
+      - "f:/etc/systemd/journald.conf -> r:^RuntimeKeepFree="
+      - "f:/etc/systemd/journald.conf -> r:^MaxFileSec="
 
   # 5.1.1.7 Ensure journald default file permissions configured. (Manual) - Not Implemented
 
