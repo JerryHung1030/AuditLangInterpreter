@@ -3259,7 +3259,7 @@ checks:
       - nist_sp_800-53: ["AC-6(2)", "AC-6(5)"]
       - pci_dss_v3.2.1: ["7.1", "7.1.1", "7.1.2", "7.1.3"]
       - soc_2: ["CC6.1", "CC6.3"]
-    condition: all
+    condition: any
     rules:
       - 'c:sudo -V -> r:Authentication timestamp timeout:\s*\t*15.0 minutes'
       - 'f:/etc/sudoers -> n:timestamp_timeout=(\d+) compare <=15'
