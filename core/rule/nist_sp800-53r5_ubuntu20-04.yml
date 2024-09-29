@@ -3219,8 +3219,8 @@ checks:
       - soc_2: ["CC6.1", "CC6.3"]
     condition: none
     rules:
-      - "f:/etc/sudoers -> !r:^# && r:NOPASSWD"
-      - 'd:/etc/sudoers.d -> r:.* -> !r:^# && r:NOPASSWD'
+      - 'f:/etc/sudoers -> r:^\s*\t*NOPASSWD'
+      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*NOPASSWD'
 
   # 4.3.5 Ensure re-authentication for privilege escalation is not disabled globally. (Automated)
   - id: 19134
