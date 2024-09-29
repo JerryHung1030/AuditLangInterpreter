@@ -3239,8 +3239,8 @@ checks:
       - soc_2: ["CC6.1", "CC6.3"]
     condition: none
     rules:
-      - 'f:/etc/sudoers -> !r:^# && r:\!authenticate'
-      - 'd:/etc/sudoers.d -> r:.* -> !r:^# && r:\!authenticate'
+      - 'f:/etc/sudoers -> r:^\s*\t*!authenticate'
+      - 'd:/etc/sudoers.d -> r:\.* -> r:^\s*\t*!authenticate'
 
   # 4.3.6 Ensure sudo authentication timeout is configured correctly. (Automated)
   - id: 19135
