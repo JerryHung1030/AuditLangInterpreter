@@ -41,9 +41,9 @@ from typing import Union, Dict, List
 from enum import Enum
 from loguru import logger  # 添加 loguru
 
-from script_validator import ScriptValidator, ValidationError
-from semantic_tree_builder import SemanticTreeBuilder
-from semantic_tree_executor import SemanticTreeExecutor
+from .script_validator import ScriptValidator, ValidationError
+from .semantic_tree_builder import SemanticTreeBuilder
+from .semantic_tree_executor import SemanticTreeExecutor
 
 
 class ScriptProcessorError(Enum):
