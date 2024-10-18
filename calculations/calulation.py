@@ -92,6 +92,7 @@ base_data = {
 # OS类型列表
 os_types = ['ubuntu22.04', 'debian12', 'rhel9_linux']
 
+
 # 随机生成数据并保持总数不变
 def generate_random_distribution(base_value, num_os):
     # 创建初始分配值，使其平均分配
@@ -108,7 +109,6 @@ def generate_random_distribution(base_value, num_os):
         if distribution[i] + change >= 0:
             distribution[i] += change
     
-    # 确保总和等于 base_value
     total_assigned = sum(distribution)
     difference = base_value - total_assigned
     if difference != 0:
@@ -116,9 +116,10 @@ def generate_random_distribution(base_value, num_os):
     
     return distribution
 
-# 构建数据
+
 data = {rule_type: {os_type: count for os_type, count in zip(os_types, generate_random_distribution(base_value, len(os_types)))} 
         for rule_type, base_value in base_data.items()}
+
 
 def plot_data(data):
     # Prepare data for plotting
@@ -162,5 +163,5 @@ def plot_data(data):
     plt.savefig('rule_type_os_distribution_stacked_thin.png')
     plt.show()
 
-# 调用函数生成图表
+
 plot_data(data)

@@ -40,6 +40,7 @@ import yaml
 from enum import Enum
 from loguru import logger
 
+
 class ScriptValidationError(Enum):
     MISSING_TOP_LEVEL_FIELD = ("V001", "Missing required top-level field")
     EMPTY_CHECKS = ("V002", "'checks' section is empty or missing")
@@ -51,6 +52,7 @@ class ScriptValidationError(Enum):
     INVALID_COMPLIANCE_ENTRY = ("V008", "Each compliance entry should be a dictionary")
     INVALID_COMPLIANCE_VALUE = ("V009", "The compliance value should be a list")
 
+
 class ValidationError(Exception):
     def __init__(self, errors):
         self.errors = errors
@@ -58,6 +60,7 @@ class ValidationError(Exception):
 
     def __str__(self):
         return f"ValidationError: {self.errors}"
+
 
 class ScriptValidator:
     def __init__(self):

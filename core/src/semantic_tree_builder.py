@@ -44,6 +44,7 @@ from typing import List, Dict, Optional, Union, Tuple
 from enum import Enum
 import re
 
+
 class SemanticTreeError(Enum):
     INVALID_ID = ("E001", "Invalid id")
     INVALID_CONDITION = ("E002", "Invalid condition")
@@ -56,6 +57,7 @@ class SemanticTreeError(Enum):
     INVALID_CONTENT_OPERATOR = ("E009", "Invalid content operator")
     INVALID_COMPARE_EXPRESSION = ("E010", "Invalid compare expression")
     UNKNOWN_ERROR = ("E011", "Unknown error")
+
 
 class ExecutionNode:
     def __init__(self, type: str, main_target: str, sub_target: str = None, target_pattern: str = None):
@@ -74,6 +76,7 @@ class ExecutionNode:
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
+
 
 class ContentRule:
     def __init__(self, content_operator: str, value: str, compare_operator: str = None, compare_value: str = None, negation: bool = False):
@@ -95,11 +98,12 @@ class ContentRule:
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
 
+
 class FileRule:
     def __init__(self, execution_node: ExecutionNode, content_rules: List[ContentRule] = None, negation: bool = False):
-        self.execution_node = execution_node                        # Single ExecutionNode for the file
-        self.content_rules = content_rules if content_rules else [] # List of ContentRules applied to the file
-        self.negation = negation                                    # Boolean indicating if the rule is negated
+        self.execution_node = execution_node                         # Single ExecutionNode for the file
+        self.content_rules = content_rules if content_rules else []  # List of ContentRules applied to the file
+        self.negation = negation                                     # Boolean indicating if the rule is negated
 
     def to_dict(self):
         return {
@@ -110,6 +114,7 @@ class FileRule:
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
+
 
 class DirectoryRule:
     def __init__(self, execution_node: ExecutionNode, file_rules: List[FileRule] = None, negation: bool = False):
@@ -127,11 +132,12 @@ class DirectoryRule:
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
 
+
 class CommandRule:
     def __init__(self, execution_node: ExecutionNode, content_rules: List[ContentRule] = None, negation: bool = False):
-        self.execution_node = execution_node                        # ExecutionNode for the command
-        self.content_rules = content_rules if content_rules else [] # List of ContentRules applied to the command output
-        self.negation = negation                                    # Boolean indicating if the rule is negated
+        self.execution_node = execution_node                         # ExecutionNode for the command
+        self.content_rules = content_rules if content_rules else []  # List of ContentRules applied to the command output
+        self.negation = negation                                     # Boolean indicating if the rule is negated
 
     def to_dict(self):
         return {
@@ -142,6 +148,7 @@ class CommandRule:
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
+
 
 class ProcessRule:
     def __init__(self, execution_node: ExecutionNode, negation: bool = False):
@@ -157,11 +164,12 @@ class ProcessRule:
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
 
+
 class RegistryRule:
     def __init__(self, execution_node: ExecutionNode, content_rules: List[ContentRule] = None, negation: bool = False):
-        self.execution_node = execution_node                        # ExecutionNode for the registry key
-        self.content_rules = content_rules if content_rules else [] # List of ContentRules applied to the registry key
-        self.negation = negation                                    # Boolean indicating if the rule is negated
+        self.execution_node = execution_node                         # ExecutionNode for the registry key
+        self.content_rules = content_rules if content_rules else []  # List of ContentRules applied to the registry key
+        self.negation = negation                                     # Boolean indicating if the rule is negated
 
     def to_dict(self):
         return {
@@ -172,6 +180,7 @@ class RegistryRule:
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
+
 
 class ConditionNode:
     def __init__(self, id: str, condition: str, rules: List):
@@ -188,6 +197,7 @@ class ConditionNode:
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)
+
 
 class SemanticTreeBuilder:
     def __init__(self):

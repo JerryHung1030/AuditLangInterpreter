@@ -47,6 +47,7 @@ from datetime import datetime
 from loguru import logger
 from script_processor import ScriptProcessor
 
+
 def generate_unique_filename(directory, base_filename, extension):
     """
     Generate a unique filename by appending a serial number if the file exists.
@@ -60,6 +61,7 @@ def generate_unique_filename(directory, base_filename, extension):
         full_path = os.path.join(directory, filename)
     return full_path
 
+
 def get_os_info(ssh_details):
     """
     Retrieve the operating system information from the remote host via SSH.
@@ -68,7 +70,7 @@ def get_os_info(ssh_details):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(
-            ssh_details['hostname'],
+            ssh_details['ip'],
             port=ssh_details['port'],
             username=ssh_details['username'],
             password=ssh_details['password']
@@ -88,11 +90,14 @@ def get_os_info(ssh_details):
         logger.error(f"Error retrieving OS information: {str(e)}")
         return "Unknown"
 
+
 class FlowSequence(list):
     pass
 
+
 def represent_flow_sequence(dumper, data):
     return dumper.represent_sequence('tag:yaml.org,2002:seq', data, flow_style=True)
+
 
 class CustomDumper(yaml.SafeDumper):
     def ignore_aliases(self, data):
@@ -121,6 +126,7 @@ class CustomDumper(yaml.SafeDumper):
                 node.flow_style = best_style
         return node
 
+
 def str_presenter(dumper, data):
     if '\n' in data:
         # Use block style for multiline strings
@@ -129,11 +135,13 @@ def str_presenter(dumper, data):
         # Use double quotes for strings that might need escaping
         return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
 
+
 CustomDumper.add_representer(str, str_presenter)
 CustomDumper.add_representer(FlowSequence, represent_flow_sequence)
 CustomDumper.add_representer(int, CustomDumper.represent_int)
 CustomDumper.add_representer(float, CustomDumper.represent_float)
 CustomDumper.add_representer(bool, CustomDumper.represent_bool)
+
 
 def main(file_path: str, ssh_details: dict):
     try:
@@ -174,7 +182,7 @@ def main(file_path: str, ssh_details: dict):
         processor = ScriptProcessor()
 
         # Step 3: Process the file content to generate the semantic tree JSON
-        tree_json = processor.process(file_content)
+        tree_json = processor.process_yml(file_content)
 
         # Step 4: Check if processing resulted in an error
         if isinstance(tree_json, dict) and tree_json.get("status") == "error":
@@ -272,7 +280,7 @@ def main(file_path: str, ssh_details: dict):
             # Prepare audit information in the specified order
             audit_info = {
                 'time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'endpoint': ssh_details['hostname'],
+                'endpoint': ssh_details['ip'],
                 'operating_system': operating_system,
                 'total_checks': total_checks,
                 'total_rules': total_rules,
@@ -328,14 +336,15 @@ def main(file_path: str, ssh_details: dict):
         logger.error(f"An unexpected error occurred: {str(e)}")
         sys.exit(4)
 
+
 if __name__ == "__main__":
     if len(sys.argv) < 6:
-        logger.info("Usage: python main.py <path_to_yml_file> <hostname> <username> <password> <port>")
+        logger.info("Usage: python main.py <path_to_yml_file> <ip> <username> <password> <port>")
         sys.exit(5)
     else:
         file_path = sys.argv[1]
         ssh_details = {
-            'hostname': sys.argv[2],
+            'ip': sys.argv[2],
             'username': sys.argv[3],
             'password': sys.argv[4],
             'port': int(sys.argv[5])

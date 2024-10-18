@@ -17,6 +17,7 @@ os_folders = [
     'ubuntu22.04'
 ]
 
+
 def parse_yaml_files(base_dir):
     data = defaultdict(lambda: defaultdict(int))
 
@@ -61,6 +62,7 @@ def parse_yaml_files(base_dir):
 
     return data
 
+
 def plot_data(data):
     # Prepare data for plotting
     rule_types = ['f', 'd', 'c', 'r', 'p']
@@ -77,7 +79,7 @@ def plot_data(data):
         values = [data[rule_type][os_type] for rule_type in rule_types]
         bars = ax.bar(x, values, width=width, bottom=bottom, label=os_type)
 
-        bottom = [i+j for i, j in zip(bottom, values)]
+        bottom = [i + j for i, j in zip(bottom, values)]
 
         # Add text labels for each bar
         for i, bar in enumerate(bars):
@@ -103,6 +105,7 @@ def plot_data(data):
     plt.tight_layout()
     plt.savefig('rule_type_os_distribution_stacked_thin.png')
     plt.show()
+
 
 base_directory = '.'  # Set to current directory
 data = parse_yaml_files(base_directory)

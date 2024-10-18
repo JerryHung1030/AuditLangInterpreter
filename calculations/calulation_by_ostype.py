@@ -14,6 +14,7 @@ os_folders = [
     'debian', 'rhel', 'sunos', 'ubuntu', 'windows', 'tested_data'
 ]
 
+
 def parse_yaml_files(base_dir):
     data = defaultdict(lambda: defaultdict(int))
     script_counts = defaultdict(int)
@@ -68,6 +69,7 @@ def parse_yaml_files(base_dir):
 
     return data, script_counts, total_checks, total_rules
 
+
 def plot_data(data, script_counts, total_checks, total_rules):
     # Prepare data for plotting
     categories = ['f', 'd', 'c', 'r', 'p']
@@ -86,7 +88,7 @@ def plot_data(data, script_counts, total_checks, total_rules):
 
     for i, label in enumerate(labels):
         bars = ax1.bar(os_types, values[label], bottom=bottom, label=label, color=colors[i])
-        bottom = [i+j for i,j in zip(bottom, values[label])]
+        bottom = [i + j for i, j in zip(bottom, values[label])]
 
         # Add text labels for each bar
         for bar in bars:
@@ -123,6 +125,7 @@ def plot_data(data, script_counts, total_checks, total_rules):
     plt.tight_layout()
     plt.savefig('os_rule_script_distribution.png')
     plt.show()
+
 
 base_directory = '.'  # Set to current directory
 data, script_counts, total_checks, total_rules = parse_yaml_files(base_directory)

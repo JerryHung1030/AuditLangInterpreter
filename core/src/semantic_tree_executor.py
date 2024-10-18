@@ -43,8 +43,8 @@ import paramiko
 import re
 from typing import Dict, Optional, Union, Tuple, List, Any
 import json
-import sys
 from enum import Enum
+
 
 class ExecutionError(Enum):
     MISMATCH_OS_TYPE = ("E101", "Mismatch in OS types")
@@ -65,9 +65,10 @@ class ExecutionError(Enum):
     INVALID_FILE_LIST = ("E116", "Invalid or empty file list provided")
     UNKNOWN_ERROR = ("E117", "Unknown error occurred during execution")
 
+
 class SSHManager:
-    def __init__(self, hostname: str, username: str, password: str, port: int = 22):
-        self.hostname = hostname
+    def __init__(self, ip: str, username: str, password: str, port: int = 22):
+        self.ip = ip
         self.username = username
         self.password = password
         self.port = port
@@ -81,11 +82,11 @@ class SSHManager:
         try:
             self.client = paramiko.SSHClient()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self.client.connect(self.hostname, port=self.port, username=self.username, password=self.password)
-            logger.info(f"Connected to {self.hostname} on port {self.port}")
+            self.client.connect(self.ip, port=self.port, username=self.username, password=self.password)
+            logger.info(f"Connected to {self.ip} on port {self.port}")
         except paramiko.AuthenticationException:
-            logger.error(f"Authentication failed when connecting to {self.hostname}")
-            raise Exception(f"Authentication failed when connecting to {self.hostname}")
+            logger.error(f"Authentication failed when connecting to {self.ip}")
+            raise Exception(f"Authentication failed when connecting to {self.ip}")
         except paramiko.SSHException as e:
             logger.error(f"Could not establish SSH connection: {str(e)}")
             raise Exception(f"Could not establish SSH connection: {str(e)}")
@@ -146,7 +147,8 @@ class SSHManager:
         if self.client:
             self.client.close()
             self.client = None
-            logger.info(f"Disconnected from {self.hostname}")
+            logger.info(f"Disconnected from {self.ip}")
+
 
 class OSCommandBuilder:
     def __init__(self, os_type: str):
@@ -214,6 +216,7 @@ class OSCommandBuilder:
         else:
             raise ValueError(f"Unsupported OS type: {self.os_type}")
 
+
 class ExecutionResult:
     def __init__(self, success: bool, output: Optional[str] = None, error: Optional[str] = None):
         self.success = success
@@ -226,6 +229,7 @@ class ExecutionResult:
             "output": self.output,
             "error": self.error
         }
+
 
 class ExecutionNodeExecutor:
     def __init__(self, node_type: str, main_target: str, sub_target: Optional[str], target_pattern: Optional[str], os_type: str):
@@ -337,7 +341,6 @@ class ExecutionNodeExecutor:
             logger.exception(f"Listing files with pattern failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
 
-
     def _filter_files_with_pattern(self, file_list: str, pattern: str) -> list:
         try:
             regex = re.compile(pattern)
@@ -369,8 +372,9 @@ class ExecutionNodeExecutor:
             elif error:
                 return ExecutionResult(success=True, output=error)
             else:
-                logger.error("Command failed with no result")
-                return ExecutionResult(success=False, error="Command failed with no result")
+                return ExecutionResult(success=True, output="")
+                # logger.error("Command failed with no result")
+                # return ExecutionResult(success=False, error="Command failed with no result")
 
         except Exception as e:
             logger.exception(f"Command execution failed: {str(e)}")
@@ -408,6 +412,7 @@ class ExecutionNodeExecutor:
             logger.exception(f"Registry key check failed: {str(e)}")
             return ExecutionResult(success=False, error=f"{ExecutionError.SSH_EXECUTION_FAILED.value[1]}: {str(e)}")
         
+
 class ContentCheckResult:
     def __init__(self, success: bool, error: Optional[str] = None, details: Optional[str] = None):
         self.success = success
@@ -424,6 +429,7 @@ class ContentCheckResult:
     def __repr__(self):
         return f"ContentCheckResult(success={self.success}, error={self.error}, details={self.details})"
 
+
 class ContentRuleChecker:
     def __init__(
         self,
@@ -439,7 +445,7 @@ class ContentRuleChecker:
         self.ssh_manager = ssh_manager
         self.command_builder = command_builder
         self.os_type = os_type
-        self.rule_negation  = rule_negation
+        self.rule_negation = rule_negation
 
     def check(self, content: Union[str, List[str]]) -> ContentCheckResult:
         try:
@@ -615,33 +621,38 @@ class ContentRuleChecker:
             logger.debug("Content is a single file path, not a JSON list: {}", content)
             return [content]
 
+
 class SemanticTreeExecutionResult:
-    def __init__(self, success: bool, results: Optional[Dict[str, Any]] = None, error: Optional[str] = None):
+    def __init__(self, success: bool, results: Optional[Dict[str, Any]] = None, 
+                 error: Optional[str] = None, executed_count: int = 0):
         self.success = success
         self.results = results if results is not None else {}
         self.error = error
+        self.executed_count = executed_count
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "success": self.success,
             "results": self.results,
-            "error": self.error
+            "error": self.error,
+            "executed_count": self.executed_count
         }
 
     def __repr__(self):
-        return f"SemanticTreeExecutionResult(success={self.success}, results={self.results}, error={self.error})"
+        return f"SemanticTreeExecutionResult(success={self.success}, results={self.results}, error={self.error}, executed_count={self.executed_count})"
+
 
 class SemanticTreeExecutor:
-    def __init__(self, hostname: str, username: str, password: str, port: int = 22):
-        self.ssh_manager = SSHManager(hostname, username, password, port)
+    def __init__(self, ip: str, username: str, password: str, port: int = 22):
+        self.ssh_manager = SSHManager(ip, username, password, port)
 
     def connect(self) -> bool:
         try:
             self.ssh_manager.connect()
-            logger.info(f"Connected to {self.ssh_manager.hostname}")
+            logger.info(f"Connected to {self.ssh_manager.ip}")
             return True
         except Exception as e:
-            logger.error(f"Failed to connect to {self.ssh_manager.hostname}: {str(e)}")
+            logger.error(f"Failed to connect to {self.ssh_manager.ip}: {str(e)}")
             return False
 
     def execute_tree(self, semantic_tree: Dict) -> SemanticTreeExecutionResult:
@@ -653,6 +664,8 @@ class SemanticTreeExecutor:
         checks = semantic_tree.get('checks', [])
         # Default to 'linux' if not provided
         os_type = semantic_tree.get('os_type', 'linux')
+
+        successful_check_count = 0
 
         for check in checks:
             check_id = check['id']
@@ -681,6 +694,9 @@ class SemanticTreeExecutor:
                     error=f"Invalid condition specified at check ID {check_id}"
                 )
 
+            if check_pass:
+                successful_check_count += 1
+
             # Store the check result with rule details and condition
             results[check_id] = {
                 'result': 'pass' if check_pass else 'fail',
@@ -692,7 +708,7 @@ class SemanticTreeExecutor:
 
         # Close the SSH connection after all checks
         self.ssh_manager.close()
-        return SemanticTreeExecutionResult(success=True, results=results)
+        return SemanticTreeExecutionResult(success=True, results=results, executed_count=successful_check_count)
 
     def _execute_rules(self, rules: List[Dict], os_type: str) -> Union[List[bool], SemanticTreeExecutionResult]:
         rule_results = []
