@@ -1,96 +1,268 @@
-# Semantic Tree Builder Usage Guide
+# AuditLang Interpreter Interface
 
 ## Overview
 
-The Semantic Tree Builder is a Python-based tool designed to parse and build semantic tree structures from a set of rules defined in YAML files. It supports various types of rules, including file rules, directory rules, command rules, process rules, and registry rules. The tool also validates the rules and handles errors related to invalid syntax or conditions.
+**AuditLang Interpreter Interface** is a robust SSH-based auditing tool designed to automate system-level auditing tasks, including log analysis and configuration management. Users can define audit logic using a straightforward language within `.yml` files, enabling easy creation and management of audit scripts. The interface seamlessly integrates with various auditing tools, offering a unified and platform-independent solution for comprehensive system audits.
 
-## Prerequisites
+In future releases, the interface will be encapsulated into Python packages, enhancing modularity and simplifying integration with other Python-based systems and tools.
 
-Before using the Semantic Tree Builder, ensure that your environment meets the following requirements:
+## Features
 
-- Python 3.10.12
-- pip (Python package installer)
+- **SSH-Based Auditing**: Perform audits on remote systems via secure SSH connections.
+- **Simple Audit Definitions**: Define audit logic using an intuitive language within `.yml` files.
+- **Batch Processing**: Efficiently handle multiple audit rules by batching them in YAML files.
+- **Extensible Interface**: Easily integrate with a variety of auditing tools through a standardized interface.
+- **Commit History Preservation**: Maintain a complete history of changes with full commit records.
+- **Platform Agnostic**: Operates independently of the target audit operating system for broad compatibility.
+- **Scalable Support**: Currently supports Ubuntu 20.04 with plans to extend to Windows, Debian, and Red Hat Enterprise Linux.
 
-## Setting Up the Environment
+## Table of Contents
 
-### 1. Clone the Repository
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
+- [Usage](#usage)
+  - [Use Cases](#use-cases)
+    - [Main Use Case](#main-use-case)
+    - [Demo Use Case](#demo-use-case)
+  - [Defining Audit Logic](#defining-audit-logic)
+  - [Executing Audits](#executing-audits)
+- [Interface Functions](#interface-functions)
+  - [ScriptProcessor Class](#scriptprocessor-class)
+- [Supported Platforms](#supported-platforms)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-If you haven't already cloned the repository, you can do so using Git:
+## Installation
+
+### Prerequisites
+
+- **Python 3.10.12** or higher
+- **Git** for repository management
+
+### Steps
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone <your-repository-url>
+   ```
+
+2. **Navigate to the Project Directory**
+
+   ```bash
+   cd <repository-name>
+   ```
+
+3. **Install Dependencies**
+
+   It's recommended to use a virtual environment:
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+   Then install the required packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+### Use Cases
+
+#### Main Use Case
+
+The `main.py` script demonstrates how to utilize the **AuditLang Interpreter Interface**. It processes YAML audit files, executes defined audit checks on a target system via SSH, and generates detailed reports.
+
+**Example Command:**
 
 ```bash
-git clone [this_project]
-cd this_project
+python main.py <path_to_yml_file> <ip> <username> <password> <port>
 ```
 
-### 2. Create a Virtual Environment
-
-It is recommended to use a virtual environment to manage dependencies. To create and activate a virtual environment, follow these steps:
-
-#### On macOS/Linux:
+**Example:**
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python main.py audits/ssh_audit.yml 192.168.1.100 admin secretpassword 22
 ```
 
-#### On Windows:
+This command processes the specified YAML file, executes the defined audit checks on the target system, and generates a comprehensive report.
+
+#### Demo Use Case
+
+The `demo/` directory provides a complete demonstration of the **AuditLang Interpreter Interface** in action, including backend, frontend, and Docker Compose setup. For detailed instructions on setting up and running the demo, please refer to the [Demo README](demo/README.md).
+
+### Defining Audit Logic
+
+Create audit rules using a simple language and organize them within `.yml` files. Below is an example structure:
+
+```yaml
+checks:
+  - id: check_001
+    title: Ensure SSH is installed
+    description: SSH should be installed for remote access.
+    condition: installed
+    rules:
+      - rule_1
+      - rule_2
+    compliance:
+      PCI-DSS: ["Requirement 2.2.1", "Requirement 2.2.2"]
+```
+
+### Executing Audits
+
+Use the provided `main.py` script to execute audits and generate reports.
 
 ```bash
-python -m venv .venv
-.\.venv\Scripts\activate
+python main.py <path_to_yml_file> <ip> <username> <password> <port>
 ```
 
-### 3. Install Dependencies
-
-Once the virtual environment is activated, install the required Python packages by running:
+**Example:**
 
 ```bash
-pip install -r requirements.txt
+python main.py audits/ssh_audit.yml 192.168.1.100 admin secretpassword 22
 ```
 
-## Running the Main Program
+This command processes the specified YAML file, executes the defined audit checks on the target system, and generates a detailed report.
 
-### 1. Prepare Your YAML File
+## Interface Functions
 
-Ensure that your YAML file is structured correctly and follows the required format. The YAML file should include a `checks` section with one or more scripts, each containing rules that can be parsed and validated by the tool.
+The core functionality of the **AuditLang Interpreter Interface** is encapsulated within the `ScriptProcessor` class, which provides methods to process audit scripts and execute audits via SSH.
 
-### 2. Run the Main Program
+### ScriptProcessor Class
 
-To run the main program, execute the following command:
+Handles the end-to-end processing of audit scripts, including validation, semantic tree construction, and execution.
 
-```bash
-cd core/src
-python3 main.py <path_to_yml_file>
+- **Initialization**
+
+  ```python
+  def __init__(self):
+      self.validator = ScriptValidator()
+      self.tree_builder = SemanticTreeBuilder()
+  ```
+
+- **Methods**
+
+  - `process_yml(file_content: str) -> Union[str, Dict]`
+
+    Validates the YAML content and builds a semantic tree.
+
+  - `process_json(script_list: List[Dict]) -> Union[str, Dict]`
+
+    Processes a list of JSON scripts to build a semantic tree.
+
+  - `executor(tree_json: str, ssh_details: Dict) -> Dict`
+
+    Executes the semantic tree on the target system via SSH.
+
+#### Example Usage of ScriptProcessor
+
+```python
+from script_processor import ScriptProcessor
+
+# Initialize the processor
+processor = ScriptProcessor()
+
+# Process a YAML file content
+with open('audits/ssh_audit.yml', 'r') as file:
+    yaml_content = file.read()
+tree_json = processor.process_yml(yaml_content)
+
+# Define SSH details
+ssh_details = {
+    'ip': '192.168.1.100',
+    'username': 'admin',
+    'password': 'secretpassword',
+    'port': 22
+}
+
+# Execute the semantic tree
+result = processor.executor(tree_json, ssh_details)
+
+# Handle the result
+if result['status'] == 'success':
+    print("Audit completed successfully.")
+    print(result['results'])
+else:
+    print("Audit failed.")
+    print(result['error_message'])
 ```
 
-Replace `<path_to_yml_file>` with the actual path to your YAML file.
+## Supported Platforms
 
-### 3. Interpreting the Output
+**AuditLang Interpreter Interface** has been successfully tested on:
 
-The program will output either a JSON representation of the semantic tree if the processing is successful or detailed error messages if any validation or tree-building errors occur.
+- **Ubuntu 20.04**
 
-- **Success Output**: A JSON string representing the semantic tree.
-- **Error Output**: A structured dictionary containing error codes, error messages, and details.
+Future support plans include:
 
-## Running Tests with pytest
+- **Windows**
+- **Debian**
+- **Red Hat Enterprise Linux**
 
-### 1. Running the Tests
+## Future Enhancements
 
-Navigate to the root directory of the project and run the following command to execute all tests:
+- **Python Package Encapsulation**: Encapsulate interface functionalities into Python packages for enhanced modularity and integration.
+- **Extended OS Support**: Broaden compatibility to include additional operating systems.
+- **Enhanced Validation**: Implement comprehensive JSON validation for audit scripts.
+- **GUI Integration**: Develop a graphical user interface for easier audit management.
+- **Cloud Integration**: Enable auditing of cloud-based infrastructures and services.
 
-```bash
-cd rule_exec_engine/core/tests
-pytest test_semantic_tree_builder.py
-```
+## Contributing
 
-### 2. Viewing Test Results
+Contributions are welcome! Follow these steps to contribute:
 
-After running the tests, pytest will display a summary of the test results, including the number of tests passed, failed, or skipped. Detailed output for failed tests will be provided, including the assertion errors and stack traces.
+1. **Fork the Repository**
+2. **Create a Feature Branch**
 
-## Additional Notes
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
 
-- **Error Handling**: The program is designed to halt processing as soon as an error is encountered, providing clear feedback about the issue.
-- **Extensibility**: The tool can be extended with additional rule types or validators if needed.
-- **Licensing**: This software is licensed under a commercial license. Redistribution and use in source and binary forms, with or without modification, are not permitted without explicit written permission from the author.
+3. **Commit Your Changes**
 
-This guide should provide you with a comprehensive overview of how to set up, run, and test the Semantic Tree Builder. If you encounter any issues or have further questions, please refer to the project's documentation or contact the author for support.
+   ```bash
+   git commit -m "Add your feature"
+   ```
+
+4. **Push to the Branch**
+
+   ```bash
+   git push origin feature/YourFeature
+   ```
+
+5. **Open a Pull Request**
+
+Ensure your code adheres to the project's coding standards and includes appropriate tests.
+
+## License
+
+This project is licensed under the **GNU General Public License (GPL) v3.0**. Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. **Non-Commercial Use Only**: This software may not be used for commercial purposes without explicit written permission from the author.
+
+2. **Source Code Availability**: Any modified versions of this software must also be licensed under the GPL v3.0.
+
+3. **Preservation of License**: All copies of the software, including modified versions, must include this license notice.
+
+**Unauthorized commercial use of this software is strictly prohibited.**
+
+## Contact
+
+For inquiries or support, please contact:
+
+**Jerry Hung**  
+Email: [chiehlee.hung@gmail.com](mailto:chiehlee.hung@gmail.com)
+
+---
+
+© 2024 AuditLang Interpreter Interface. All rights reserved.
+
+---
+
+**Note:** The GNU General Public License (GPL) v3.0 itself does not restrict commercial use. If you intend to prohibit commercial use, consider using a different license or consult with a legal professional to create a custom license that meets your requirements. Combining GPL with additional restrictions may violate the terms of the GPL, leading to potential legal issues.
